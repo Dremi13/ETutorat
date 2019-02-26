@@ -1,14 +1,21 @@
 package models;
 
 
+import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 
 @MappedSuperclass
 public abstract class Etudiant extends Utilisateur {
 
+	
+
+	
+	@Column(unique = true)
 	private String codeEtu;
 	private int telephone;
 	private String filière;
+	
+	
 	
 	public String getCodeEtu() {
 		return codeEtu;

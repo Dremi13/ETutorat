@@ -1,0 +1,18 @@
+package dao;
+
+import java.util.List;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import models.Utilisateur;
+
+
+@Repository
+public interface UtilisateurRepository<T, PK> extends JpaRepository<Utilisateur, Long> {
+
+	
+	public List<Utilisateur> findByNom();
+	public Utilisateur findByEmail();
+	
+}

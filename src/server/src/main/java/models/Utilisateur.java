@@ -1,14 +1,38 @@
 package models;
 
+
+import java.io.Serializable;
+
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 
-@MappedSuperclass
-public abstract class Utilisateur {
 
-	private long id;
+
+
+@MappedSuperclass
+public abstract class Utilisateur implements Serializable {
+
+	
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+	
+	
+	
 	private String nom;
+	
+	
 	private String prenom;
+	
+	@Column(unique = true)
 	private String email;
+	
+	
+	
 	
 	
 	public long getId() {
