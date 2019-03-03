@@ -1,0 +1,1 @@
+INSERT INTO Tuteur(nom,prenom,email,codeetu,telephone,filiere,validationcompte) values('Test','test','test@test.com','a12345678','0123456789','Master 2 Informatique',true);
