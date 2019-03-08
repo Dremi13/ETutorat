@@ -44,12 +44,11 @@ public class Seance implements Serializable {
 	
 	
 	
-	
 	@ManyToOne
 	private Salle salle;
 	
 
-	
+	public Seance() {}
 	
 	public Long getId() {
 		return id;

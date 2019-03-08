@@ -1,0 +1,39 @@
+<form [formGroup]="signinForm" (ngSubmit)="onSubmit()">
+  
+    <label>
+      Code etudiant :
+      <input type="text" formControlName="login" required>
+    </label>
+  
+    <div *ngIf="login.invalid && (login.dirty || login.touched)" class="alert alert-danger">
+      <div *ngIf="login.errors.required">
+        Code étudiant requis.
+      </div>
+      <div *ngIf="(login.errors.minlength || login.errors.maxlength) && login.touched">
+        Un code étudiant est composé de 9 caractères.
+      </div>
+    </div>
+
+
+    <label>
+      Mot de passe :
+      <input type="password" formControlName="password" required>
+    </label>
+
+    <div *ngIf="password.invalid && (password.dirty || password.touched)" class="alert alert-danger">
+        <div *ngIf="password.errors.required">
+          Mot de passe requis.
+        </div>
+        <div *ngIf="(password.errors.minlength || password.errors.maxlength) && password.touched">
+          Un mot de passe doit :
+          <ul>
+            <li><p>faire entre 4 et 16 caractères.</p><li>
+
+            </ul>
+        </div>
+    </div>
+
+
+
+    <button type="submit" [disabled]="!signinForm.valid">Se connecter</button>
+  </form>

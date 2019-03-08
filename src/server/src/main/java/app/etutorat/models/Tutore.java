@@ -24,6 +24,11 @@ public class Tutore extends Etudiant {
 			   joinColumns=@JoinColumn(name="TUTORE_ID", referencedColumnName="id"),
 			   inverseJoinColumns=@JoinColumn(name="MAT_ID", referencedColumnName="id"))
 	private Set<Matiere> demandes;
+	
+	
+	
+
+	public Tutore() {}
 
 	public Set<Matiere> getDemandes() {
 		return demandes;

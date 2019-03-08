@@ -4,6 +4,7 @@ package app.etutorat.models;
 import java.io.Serializable;
 
 import javax.persistence.Column;
+import javax.persistence.Lob;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -31,14 +32,33 @@ public abstract class Utilisateur implements Serializable {
 	@Column(unique = true)
 	private String email;
 	
+	@Lob
+	private byte[] password;
+	
+	@Lob
+	private byte[] salt;
+	
+	public Utilisateur() {}
+	
+	public Utilisateur(
+			String nom,
+			String prenom,
+			String email,
+			byte[] password,
+			byte[] salt) 
+	{
+		this.nom = nom;
+		this.prenom = prenom;
+		this.email = email;
+		this.password = password;
+		this.salt = salt;
+	}
 	
 	
-	
-	
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 	public String getNom() {
@@ -59,6 +79,19 @@ public abstract class Utilisateur implements Serializable {
 	public void setEmail(String email) {
 		this.email = email;
 	}
+	public byte[] getPassword() {
+		return password;
+	}
+	public void setPassword(byte[] password) {
+		this.password = password;
+	}
+	public byte[] getSalt() {
+		return salt;
+	}
+	public void setSalt(byte[] salt) {
+		this.salt = salt;
+	}
+	
 	
 	
 	

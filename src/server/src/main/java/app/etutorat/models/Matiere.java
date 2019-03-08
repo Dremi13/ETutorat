@@ -11,6 +11,9 @@ public class Matiere {
 	
 	private String nom;
 
+	public Matiere() {}
+	
+	
 	public long getId() {
 		return id;
 	}

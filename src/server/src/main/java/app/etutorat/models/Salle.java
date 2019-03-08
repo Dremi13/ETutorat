@@ -25,7 +25,7 @@ public class Salle implements Serializable {
 	private String site;
 	private int capacite;
 	
-	
+	public Salle() {}
 	
 	public Long getId() {
 		return id;
