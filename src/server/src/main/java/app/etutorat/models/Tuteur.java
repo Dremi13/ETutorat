@@ -26,6 +26,60 @@ public class Tuteur extends Etudiant {
 	private boolean validationcompte;
 	
 	
+	public Tuteur() {}
+	
+	
+	public Tuteur(
+			String nom,
+			String prenom,
+			String email,
+			byte[] password,
+			byte[] salt,
+			String codeetu,
+			String telephone,
+			String filiere,
+			Set<Matiere> domaineDeCompetences, 
+			boolean validationcompte) 
+	{
+		super(nom, prenom, email, password, salt, codeetu, telephone, filiere);
+		this.domaineDeCompetences = domaineDeCompetences;
+		this.validationcompte = validationcompte;
+		
+		
+	}
+	
+	public Tuteur(
+			String nom,
+			String prenom,
+			String email,
+			byte[] password,
+			byte[] salt,
+			String codeetu,
+			String telephone,
+			String filiere,
+			boolean validationcompte) 
+	{
+		super(nom, prenom, email, password, salt, codeetu, telephone, filiere);
+		this.validationcompte = validationcompte;
+		
+		
+	}
+	
+	public Tuteur(
+			String nom,
+			String prenom,
+			String email,
+			byte[] password,
+			byte[] salt,
+			String codeetu,
+			String telephone,
+			String filiere) 
+	{
+		super(nom, prenom, email, password, salt, codeetu, telephone, filiere);
+		
+		
+	}
+	
 	
 	public Set<Matiere> getDomaineDeCompetences() {
 		return domaineDeCompetences;
