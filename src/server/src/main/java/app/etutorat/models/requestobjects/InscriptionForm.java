@@ -70,12 +70,12 @@ public final class InscriptionForm {
 	    }
 	}
 
-	private void validationMotsDePasse( String motDePasse, String confirmation ) throws Exception {
+	private void validationMotsDePasse( String password, String confirmation ) throws Exception {
 
-	    if ( motDePasse != null && confirmation != null ) {
-	        if ( !motDePasse.equals( confirmation ) ) {
+	    if ( password != null && confirmation != null ) {
+	        if ( !password.equals( confirmation ) ) {
 	            throw new Exception( "Les mots de passe entrés sont différents, merci de les saisir à nouveau." );
-	        } else if ( motDePasse.length() < 3 ) {
+	        } else if ( password.length() < 3 ) {
 	            throw new Exception( "Les mots de passe doivent contenir au moins 3 caractères." );
 	        }
 	    } else {
