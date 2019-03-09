@@ -1,7 +1,6 @@
 package app.etutorat.models;
 
 
-import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;

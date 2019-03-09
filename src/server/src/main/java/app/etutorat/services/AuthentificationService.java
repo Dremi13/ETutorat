@@ -5,6 +5,8 @@ import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.SecureRandom;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Random;
 
 import javax.servlet.http.HttpSession;
@@ -43,8 +45,14 @@ public class AuthentificationService {
 	private static final Random sr = new SecureRandom();
 	
 	public UserToken checkSignin() throws UserNotSignedInException {
+		
+		System.out.println(this.httpSession.getId());
 		//Si session déjà ouverte :
-		  if(httpSession.getAttribute("token") != null) {
+		List<String> ll = Collections.list(this.httpSession.getAttributeNames());
+		System.out.println(ll);
+		System.out.println(this.httpSession.getAttribute("token"));
+		
+		  if(this.httpSession.getAttribute("token") != null) {
 			  return (UserToken) httpSession.getAttribute("token");
 		  }
 		  
@@ -79,14 +87,15 @@ public class AuthentificationService {
 				token.setType("tuteur");
 			}
 			
-			
+			token.setLogin(etu.getCodeetu());
+			this.httpSession.setAttribute("token", token);
 		
 		} catch(NoSuchProviderException | NoSuchAlgorithmException ex) {
 			//Grosse erreur
 			ex.printStackTrace();
 		}
 		
-		token.setLogin(etu.getCodeetu());
+		
 		return token;
 	}
 	
@@ -142,12 +151,17 @@ public class AuthentificationService {
 	        
 	        tur.save(t);
 	        
-	        
+	        this.httpSession.setAttribute("token", token);
+	        System.out.println(this.httpSession.getId());
+	        List<String> ll = Collections.list(this.httpSession.getAttributeNames());
+			System.out.println(ll);
+			System.out.println(this.httpSession.getAttribute("token"));
         	
         } catch (NoSuchProviderException | NoSuchAlgorithmException ex) {
         	ex.printStackTrace();
         }
-		
+        
+        
         return token;
 		
 		
@@ -155,9 +169,6 @@ public class AuthentificationService {
 		
 	}
 	
-	/*public UserToken register(RegisterTutoresForm form) {
-		
-	}*/
-	
+
 
 }

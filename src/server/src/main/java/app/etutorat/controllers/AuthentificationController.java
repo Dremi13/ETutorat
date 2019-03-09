@@ -3,8 +3,6 @@ package app.etutorat.controllers;
 
 
 
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
 
 import javax.servlet.http.HttpSession;
 
@@ -16,6 +14,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.CrossOrigin;
+
+
 import org.springframework.web.server.ResponseStatusException;
 
 import app.etutorat.models.requestobjects.UserToken;
@@ -28,6 +29,8 @@ import app.exceptions.UserNotSignedInException;
 
 @Controller
 @RequestMapping("/auth")
+@CrossOrigin(allowCredentials = "true", origins = {"http://localhost:4200"})
+
 public class AuthentificationController {
 
 	
@@ -43,7 +46,7 @@ public class AuthentificationController {
 	  public ResponseEntity<UserToken> checkSignin() {
 	        
 		  
-		  
+		  System.out.println(this.httpSession.getAttribute("token"));
 		  
 		  try {
 			  UserToken token = as.checkSignin();
@@ -63,8 +66,8 @@ public class AuthentificationController {
 		  System.out.println("Sign in");
 		  try {
 			  UserToken token = as.signin(form);
-			  httpSession.setAttribute("token", token);
-			  return ResponseEntity.ok((UserToken) httpSession.getAttribute("token"));
+			  System.out.println(this.httpSession.getAttribute("token"));
+			  return ResponseEntity.ok((UserToken) token);
 			  
 		  }
 		  catch (WrongLoginPasswordException ex) {
@@ -81,8 +84,8 @@ public class AuthentificationController {
 		  System.out.println("Sign up");
 		  try {
 			  UserToken token = as.register(form);
-			  httpSession.setAttribute("token", token);
-			  return ResponseEntity.ok((UserToken) httpSession.getAttribute("token"));
+			  this.httpSession.setAttribute("token", token);
+			  return ResponseEntity.ok((UserToken) token);
 			  
 		  }
 		  catch (BadRegisterFormException ex) {

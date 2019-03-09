@@ -2,6 +2,7 @@ package app.etutorat.models.requestobjects;
 
 import java.io.Serializable;
 
+
 public class UserToken implements Serializable {
 
 	/**

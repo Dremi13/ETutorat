@@ -12,6 +12,6 @@ export class AppComponent {
   constructor(private authentificationService: AuthentificationService) { }
 
   ngOnInit() {
-    this.authentificationService.checkSignin();
+    
   }
 }
