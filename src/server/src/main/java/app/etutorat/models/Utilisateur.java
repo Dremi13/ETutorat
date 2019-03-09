@@ -33,7 +33,7 @@ public abstract class Utilisateur implements Serializable {
 	private String email;
 	
 	@Lob
-	private byte[] password;
+	private String password;
 	
 	@Lob
 	private byte[] salt;
@@ -44,7 +44,7 @@ public abstract class Utilisateur implements Serializable {
 			String nom,
 			String prenom,
 			String email,
-			byte[] password,
+			String password,
 			byte[] salt) 
 	{
 		this.nom = nom;
@@ -79,10 +79,10 @@ public abstract class Utilisateur implements Serializable {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	public byte[] getPassword() {
+	public String getPassword() {
 		return password;
 	}
-	public void setPassword(byte[] password) {
+	public void setPassword(String password) {
 		this.password = password;
 	}
 	public byte[] getSalt() {

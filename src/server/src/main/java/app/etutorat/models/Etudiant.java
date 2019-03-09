@@ -23,7 +23,7 @@ public abstract class Etudiant extends Utilisateur {
 			String nom,
 			String prenom,
 			String email,
-			byte[] password,
+			String password,
 			byte[] salt,
 			String codeetu,
 			String telephone,
