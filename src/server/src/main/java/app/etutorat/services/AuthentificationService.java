@@ -5,8 +5,6 @@ import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.SecureRandom;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 import java.util.Random;
 
 import javax.servlet.http.HttpSession;
@@ -46,21 +44,18 @@ public class AuthentificationService {
 	
 	public UserToken checkSignin() throws UserNotSignedInException {
 		
-		System.out.println(this.httpSession.getId());
-		//Si session déjà ouverte :
-		List<String> ll = Collections.list(this.httpSession.getAttributeNames());
-		System.out.println(ll);
-		System.out.println(this.httpSession.getAttribute("token"));
 		
-		  if(this.httpSession.getAttribute("token") != null) {
-			  return (UserToken) httpSession.getAttribute("token");
-		  }
+		//Si session déjà ouverte :
+
+		 if(this.httpSession.getAttribute("token") != null) {
+			 return (UserToken) httpSession.getAttribute("token");
+		 }
 		  
-		  else throw new UserNotSignedInException();
+		 else throw new UserNotSignedInException();
 	}
 	
+	
 	public UserToken signin(SigninForm form) throws WrongLoginPasswordException {
-		
 		
 		
 		Etudiant etu;
@@ -75,7 +70,7 @@ public class AuthentificationService {
 			if(etu == null) {
 				etu = tor.findByCodeetu(form.getLogin());
 				if(etu == null) {
-					throw new WrongLoginPasswordException(form.getLogin());
+					throw new WrongLoginPasswordException(form.getLogin() + " lol " + form.getPassword());
 				}
 				else {
 					if(!checkPassword(form.getPassword(),etu)) throw new WrongLoginPasswordException(form.getLogin());
@@ -83,7 +78,7 @@ public class AuthentificationService {
 				}
 			}
 			else {
-				if(!checkPassword(form.getPassword(),etu)) throw new WrongLoginPasswordException(form.getLogin());
+				if(!checkPassword(form.getPassword(),etu)) throw new WrongLoginPasswordException(form.getLogin()+" "+form.getPassword());
 				token.setType("tuteur");
 			}
 			
@@ -99,36 +94,6 @@ public class AuthentificationService {
 		return token;
 	}
 	
-	
-	public boolean checkPassword(String password, Utilisateur user) throws NoSuchProviderException, NoSuchAlgorithmException {
-		
-		System.out.println("salt de " + user);
-		
-		MessageDigest md = MessageDigest.getInstance("SHA-256");
-        md.update(user.getSalt());
-        byte[] bytes = md.digest(password.getBytes());
-        
-        return Arrays.equals(bytes,user.getPassword());
-        
-        
-	}
-	
-	
-	public byte[][] hashPassword(String password) throws NoSuchProviderException, NoSuchAlgorithmException{
-		
-		byte[][] result = new byte[2][];
-		MessageDigest md = MessageDigest.getInstance("SHA-256");
-		result[0] = new byte[16];
-		result[1] = new byte[16];
-		
-		sr.nextBytes(result[0]);;
-		
-		
-        md.update(result[0]);
-        result[1] = md.digest(password.getBytes());
-        
-        return result;
-	}
 	
 	
 	
@@ -152,10 +117,7 @@ public class AuthentificationService {
 	        tur.save(t);
 	        
 	        this.httpSession.setAttribute("token", token);
-	        System.out.println(this.httpSession.getId());
-	        List<String> ll = Collections.list(this.httpSession.getAttributeNames());
-			System.out.println(ll);
-			System.out.println(this.httpSession.getAttribute("token"));
+	       
         	
         } catch (NoSuchProviderException | NoSuchAlgorithmException ex) {
         	ex.printStackTrace();
@@ -163,12 +125,40 @@ public class AuthentificationService {
         
         
         return token;
-		
-		
-		
-		
+
 	}
 	
 
+	public boolean checkPassword(String password, Utilisateur user) throws NoSuchProviderException, NoSuchAlgorithmException {
+			
+		System.out.println("salt de " + user);
+			
+		MessageDigest md = MessageDigest.getInstance("SHA-256");
+	    md.update(user.getSalt());
+	    byte[] bytes = md.digest(password.getBytes());
+	        
+	    return Arrays.equals(bytes,user.getPassword());
+	        
+	        
+	}	
+		
+		
+	public byte[][] hashPassword(String password) throws NoSuchProviderException, NoSuchAlgorithmException{
+			
+		byte[][] result = new byte[2][];
+		MessageDigest md = MessageDigest.getInstance("SHA-256");
+		result[0] = new byte[16];
+		result[1] = new byte[16];
+			
+		sr.nextBytes(result[0]);;
+			
+			
+        md.update(result[0]);
+        result[1] = md.digest(password.getBytes());
+	        
+        return result;
+		}
+	
+	
 
 }

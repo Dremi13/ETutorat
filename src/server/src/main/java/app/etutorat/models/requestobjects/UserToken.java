@@ -42,9 +42,17 @@ public class UserToken implements Serializable {
 		return serialVersionUID;
 	}
 
+	
+	
+
+	@Override
+	public boolean equals(Object obj) {
+		UserToken token = (UserToken) obj;
+		return (this.login == token.login && this.type == token.type);
+	}
 
 
-
+	
 	
 	
 	

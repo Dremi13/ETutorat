@@ -14,6 +14,12 @@ public class SigninForm implements Serializable {
 	private String password;
 	
 	
+	public SigninForm(String login, String password) {
+		this.login = login;
+		this.password = password;
+	}
+	
+	
 	public String getLogin() {
 		return login;
 	}

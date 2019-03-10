@@ -1,20 +1,16 @@
 package app.etutorat.controllers;
 
 
-
-
-
-import javax.servlet.http.HttpSession;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.stereotype.Controller;
 
 
 import org.springframework.web.server.ResponseStatusException;
@@ -38,15 +34,11 @@ public class AuthentificationController {
 	  private AuthentificationService as;
 
 
-	  @Autowired
-	  HttpSession httpSession;
-	  
 	  
 	  @GetMapping("/check")
 	  public ResponseEntity<UserToken> checkSignin() {
 	        
 		  
-		  System.out.println(this.httpSession.getAttribute("token"));
 		  
 		  try {
 			  UserToken token = as.checkSignin();
@@ -66,8 +58,7 @@ public class AuthentificationController {
 		  System.out.println("Sign in");
 		  try {
 			  UserToken token = as.signin(form);
-			  System.out.println(this.httpSession.getAttribute("token"));
-			  return ResponseEntity.ok((UserToken) token);
+			  return ResponseEntity.ok(token);
 			  
 		  }
 		  catch (WrongLoginPasswordException ex) {
@@ -84,8 +75,7 @@ public class AuthentificationController {
 		  System.out.println("Sign up");
 		  try {
 			  UserToken token = as.register(form);
-			  this.httpSession.setAttribute("token", token);
-			  return ResponseEntity.ok((UserToken) token);
+			  return ResponseEntity.ok(token);
 			  
 		  }
 		  catch (BadRegisterFormException ex) {
