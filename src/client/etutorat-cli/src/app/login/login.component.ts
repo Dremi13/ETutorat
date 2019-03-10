@@ -1,8 +1,10 @@
 import { Component } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 
 import { AuthentificationService } from '../services/authentification.service';
+import { Token } from '../responseBodies/token';
 
 @Component({
   selector: 'app-login',
@@ -11,7 +13,8 @@ import { AuthentificationService } from '../services/authentification.service';
 })
 export class LoginComponent {
 
-  constructor (private as: AuthentificationService) {}
+  constructor ( private as: AuthentificationService,
+                private router : Router) {}
 
   signinForm = new FormGroup({
     login: new FormControl('', [Validators.required, Validators.minLength(9), Validators.maxLength(9)]),
@@ -22,8 +25,21 @@ export class LoginComponent {
   get password() { return this.signinForm.get('password'); }
   
   onSubmit(){
-    console.warn(this.signinForm.value);
-    this.as.signin(this.signinForm.value);
+
+    this.as.signin(this.signinForm.value)
+    .subscribe(
+      (resp: Token) => {
+        this.as.addTokenToStorage(resp);
+        this.router.navigate(['/']);
+      },
+      error => {
+        if(error.status == 404){
+          
+          alert(error.message);
+          
+          //this.router.navigate(['/login']);
+        }
+      });;
   }
 
   

@@ -4,6 +4,7 @@ import { RouterModule, Routes }  from '@angular/router';
 import { LoginComponent } from './login/login.component';
 import { PageNotFoundComponent } from './pagenotfound/pagenotfound.component';
 import { RegisterComponent } from './register/register.component';
+import { IndexComponent } from './index/index.component';
 
 
 const appRoutes: Routes = [
@@ -12,7 +13,7 @@ const appRoutes: Routes = [
       component: LoginComponent
     },
     { path: '',
-      component: LoginComponent
+      component: IndexComponent
     },
     { path: 'register',
       component: RegisterComponent

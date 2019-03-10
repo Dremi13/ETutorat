@@ -11,6 +11,7 @@ import { LoginComponent } from './login/login.component';
 import { HeaderComponent } from './header/header.component';
 import { PageNotFoundComponent } from './pagenotfound/pagenotfound.component';
 import { RegisterComponent } from './register/register.component';
+import { IndexComponent } from './index/index.component';
 
 
 
@@ -23,7 +24,8 @@ import { RegisterComponent } from './register/register.component';
     LoginComponent,
     HeaderComponent,
     PageNotFoundComponent,
-    RegisterComponent
+    RegisterComponent,
+    IndexComponent
   ],
   imports: [
     FormsModule, 
