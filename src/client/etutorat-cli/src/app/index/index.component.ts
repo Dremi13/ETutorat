@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import { Router } from '@angular/router';
 
 
@@ -12,20 +12,15 @@ import { Token } from '../responseBodies/token';
 })
 export class IndexComponent implements OnInit {
 
+  
+  
+
+
   constructor(private as: AuthentificationService,
               private router: Router) { }
 
   ngOnInit() {
-    this.as.checkSignin()
-    .subscribe((resp: Token) => {
-      console.log(resp);
-    },
-    error => {
-      if(error.status == 404){
-        console.log(error);
-        this.router.navigate(['/login']);
-      }
-    });;
+    
   }
 
 }

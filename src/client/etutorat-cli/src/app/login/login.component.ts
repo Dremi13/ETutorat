@@ -19,7 +19,8 @@ export class LoginComponent {
   signinForm = new FormGroup({
     login: new FormControl('', [Validators.required, Validators.minLength(9), Validators.maxLength(9)]),
     password: new FormControl('', [Validators.required, Validators.minLength(4), Validators.maxLength(16)])
-  })
+  });
+  
  
   get login() { return this.signinForm.get('login'); }
   get password() { return this.signinForm.get('password'); }
@@ -29,7 +30,7 @@ export class LoginComponent {
     this.as.signin(this.signinForm.value)
     .subscribe(
       (resp: Token) => {
-        this.as.addTokenToStorage(resp);
+        this.as.addToken(resp);
         this.router.navigate(['/']);
       },
       error => {
@@ -37,7 +38,7 @@ export class LoginComponent {
           
           alert(error.message);
           
-          //this.router.navigate(['/login']);
+          //this.router.navigate(['/signin']);
         }
       });;
   }

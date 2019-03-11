@@ -95,6 +95,14 @@ public class AuthentificationService {
 	}
 	
 	
+	public void signout() throws UserNotSignedInException {
+		if(this.httpSession.getAttribute("token") != null) {
+			 httpSession.removeAttribute("token");
+		 }
+		  
+		 else throw new UserNotSignedInException();
+	}
+	
 	
 	
 	//Register des tuteurs

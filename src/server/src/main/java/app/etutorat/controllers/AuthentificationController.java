@@ -41,7 +41,9 @@ public class AuthentificationController {
 		  
 		  
 		  try {
+			  
 			  UserToken token = as.checkSignin();
+			  System.out.println("checkSign OK !");
 			  return ResponseEntity.ok(token);
 		  }
 		  
@@ -53,10 +55,10 @@ public class AuthentificationController {
 	    }
 	  
 	  @PostMapping("/signin")
-	  public ResponseEntity<?> signin(@RequestBody SigninForm form){
+	  public ResponseEntity<UserToken> signin(@RequestBody SigninForm form){
 		  
-		  System.out.println("Sign in");
 		  try {
+			  System.out.println("Sign in OK");
 			  UserToken token = as.signin(form);
 			  return ResponseEntity.ok(token);
 			  
@@ -68,6 +70,20 @@ public class AuthentificationController {
 	  
 	  }
 	  
+	  
+	  @GetMapping("/signout")
+	  public ResponseEntity<String> signout(){
+		  
+		  System.out.println("Sign out");
+		  try {
+			  as.signout();
+			  return ResponseEntity.ok("");
+		  }
+		  catch (UserNotSignedInException ex) {
+			  throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not signed in", ex);
+		  }
+	  
+	  }
 	  
 	  @PostMapping("/register/tuteur")
 	  public ResponseEntity<UserToken> register(@RequestBody RegisterTuteurForm form) {
@@ -85,6 +101,8 @@ public class AuthentificationController {
 		  
 		  
 	  }
+	  
+	  
 	  
 	  
 	

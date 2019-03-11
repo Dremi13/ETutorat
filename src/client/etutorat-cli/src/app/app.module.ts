@@ -12,6 +12,8 @@ import { HeaderComponent } from './header/header.component';
 import { PageNotFoundComponent } from './pagenotfound/pagenotfound.component';
 import { RegisterComponent } from './register/register.component';
 import { IndexComponent } from './index/index.component';
+import { AdminIndexComponent } from './admin/admin-index/admin-index.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 
 
@@ -25,14 +27,16 @@ import { IndexComponent } from './index/index.component';
     HeaderComponent,
     PageNotFoundComponent,
     RegisterComponent,
-    IndexComponent
+    IndexComponent,
+    AdminIndexComponent
   ],
   imports: [
     FormsModule, 
     ReactiveFormsModule,
     BrowserModule,
     HttpClientModule,
-    AppRoutingModule
+    AppRoutingModule,
+    BrowserAnimationsModule
     
   ],
   providers: [],

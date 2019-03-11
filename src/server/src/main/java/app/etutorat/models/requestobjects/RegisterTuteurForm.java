@@ -17,7 +17,7 @@ public class RegisterTuteurForm implements Serializable {
 	private String telephone;
 	private String filiere;
 	
-	
+	public RegisterTuteurForm() {}
 	
 	public String getNom() {
 		return nom;
