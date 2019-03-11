@@ -1,3 +1,102 @@
-<p>
-  register works!
-</p>
+<!-- Tab Start Code -->
+    <ngb-tabset>
+        <ngb-tab>
+          <ng-template ngbTabTitle><b>Enregistrer</b> </ng-template>
+          <ng-template ngbTabContent>
+            <br>
+              <form [formGroup]="registrationForm" >
+                  <div class="form-group">
+                    <div class="row">
+                      <div class="col-md-2">
+                        <label for="" style="color: lightseagreen;font-size: medium;" ><b>Nom d'utilisateur*:</b></label>
+                      </div>
+                      <div class="col-md-6">
+                        <input type="text" placeholder="Nom utilisateur" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">
+                      </div>
+                      <div class="col-md-4">
+                          
+                        <span style="font-weight: bold;color: red;" *ngIf="">
+                          <span *ngIf="">Nom d'utilisateur Requis.</span>
+                          <span *ngIf=""> min 3.</span>
+                          <span *ngIf="">max 50.</span>
+                        </span>
+                       
+                      </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                      <div class="col-md-2">
+                        <label for="FormControlPassword" style="color: lightseagreen;font-size: medium;" ><b>Mot de passe*:</b></label>
+                      </div>
+                      <div class="col-md-6">
+                        <input type="password" placeholder="Password" class="" aria-label="Default" aria-describedby="inputGroup-sizing-default">
+                      </div>
+                      <div class="col-md-4">
+                          <span style="font-weight: bold;color: red;"  *ngIf="">
+                              <span *ngIf="">Mot de passe.</span>
+                              <span *ngIf="">min 3.</span>
+                              <span *ngIf="">max 50.</span>
+                            </span>
+                      </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                      <div class="col-md-2">
+                        <label for="FormControlEmail" style="color: lightseagreen;font-size: medium;" ><b>Email*:</b></label>
+                      </div>
+                      <div class="col-md-6">
+                        <input type="email" placeholder="Email" class="" aria-label="Default" aria-describedby="inputGroup-sizing-default">
+                      </div>
+                      <div class="col-md-4">
+                          <span style="font-weight: bold;color: red;" *ngIf="">
+                              <span *ngIf="">Email Rquis.</span>
+                              <span *ngIf="">Email est incorrect.</span>
+                            </span>
+                      </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                      <div class="col-md-2">
+                        <label for="" style="color: lightseagreen;font-size: medium;" ><b>Role*:</b></label>
+                      </div>
+                      <div class="col-md-6">
+                        
+                        <select  class="" id="">
+                          <option [ngValue]="undefined">Selectionner son role</option>
+                          <option>Etudiant</option>
+                          <option>Tuteur</option>
+                          <option>Tutoré</option>
+                          <option></option>
+                        </select>
+                      </div>
+                      <div class="col-md-4">
+                          <span style="font-weight: bold;color: red;" *ngIf="">
+                              <span *ngIf="">Le role est requis.</span>
+                            </span>
+                      </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                      <div class="col-md-2">
+                        <label for="" style="color: lightseagreen;font-size: medium;" ><b>Numero de tel*:</b></label>
+                      </div>
+                      <div class="col-md-6">
+                        <input type="text" class="" aria-label="Default" aria-describedby="inputGroup-sizing-default">
+                      </div>
+                      <div class="col-md-4">
+                          <span style="font-weight: bold;color: red;" *ngIf="">
+                              <span *ngIf="">Numero de tel requis.</span>
+                            </span>
+                      </div>
+                    </div>
+                    <br>
+                   
+                  </div>
+                  <button type="button" style="margin-left: 39%;" [disabled]="" class="btn btn-outline-success" (click)=""><b>Enregistrer</b></button>
+                </form>
+
+          </ng-template>
+        </ngb-tab>
+      </ngb-tabset>
+      <!-- Tab End Code -->
+  
