@@ -7,14 +7,14 @@
       </ul>
       <div *ngIf="isAdmin; else headerEtu">
          <ul class="right hide-on-med-and-down" >
-          <li><a class="waves-effect waves-light btn" (click)="redirect('/')">Index</a></li>
+          <li><a class="waves-effect waves-light btn" routerLink="/">Index</a></li>
           <li><a class="waves-effect waves-light btn" (click)="signout()">Sign Out</a></li>
         </ul>
       </div>
       <ng-template #headerEtu>
         <div *ngIf="isEtudiant; else headerSignout">
           <ul class="right hide-on-med-and-down" >
-            <li><a class="waves-effect waves-light btn" (click)="redirect('/')">Index</a></li>
+            <li><a class="waves-effect waves-light btn" routerLink="/">Index</a></li>
             <li><a class="waves-effect waves-light btn" (click)="signout()">Sign Out</a></li>
           </ul>
         </div>
@@ -22,9 +22,8 @@
 
         <ng-template #headerSignout>
           <ul class="right hide-on-med-and-down" >
-            <li><a class="waves-effect waves-light btn" (click)="redirect('/signin')">Sign in</a></li>
+            <li><a class="waves-effect waves-light btn" routerLink="/signin">Sign in</a></li>
             <li><a class="waves-effect waves-light btn" (click)="redirect('/register')">Register</a></li>
-            <li><a class="waves-effect waves-light btn" (click)="signout()">Sign Out</a></li>
           </ul>
         </ng-template>
       </ng-template>

@@ -58,10 +58,6 @@ export class HeaderComponent implements OnInit {
   }
 
 
-  redirect(url){
-    this.router.navigate([url]);
-  }
-
   signout(){
     this.as.signout().subscribe((resp: Token) => {
       console.log("body : " +resp);

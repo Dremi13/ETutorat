@@ -4,7 +4,7 @@
 
 export const environment = {
   API_URL: 'http://localhost:8080',
-  API_ADMIN: 'admin',
+  API_ADMIN: '012345',
   production: false
 };
 

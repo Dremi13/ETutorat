@@ -58,8 +58,25 @@ public class AuthentificationController {
 	  public ResponseEntity<UserToken> signin(@RequestBody SigninForm form){
 		  
 		  try {
-			  System.out.println("Sign in OK");
+			  
 			  UserToken token = as.signin(form);
+			  System.out.println("Sign in OK");
+			  return ResponseEntity.ok(token);
+			  
+		  }
+		  catch (WrongLoginPasswordException ex) {
+			  System.out.println("Sign in failed");
+			  throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Wrong login/password", ex);
+		  }
+	  
+	  }
+	  
+	  @PostMapping("/${admin.path}")
+	  public ResponseEntity<UserToken> adminSignin(@RequestBody SigninForm form){
+		  
+		  try {
+			  System.out.println("AdminSign in OK");
+			  UserToken token = as.adminSignin(form);
 			  return ResponseEntity.ok(token);
 			  
 		  }

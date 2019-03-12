@@ -23,7 +23,6 @@ export class SigninGuard implements CanActivate {
         console.log("checkSign fail, donc navigation vers Signin")
         if(error.status == 404){
           var tree = this.router.parseUrl('/signin');
-          console.log(tree.toString())
           return of(tree);
         }
       })

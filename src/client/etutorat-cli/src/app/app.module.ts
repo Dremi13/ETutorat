@@ -14,6 +14,8 @@ import { RegisterComponent } from './register/register.component';
 import { IndexComponent } from './index/index.component';
 import { AdminIndexComponent } from './admin/admin-index/admin-index.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { AdminModule } from './admin/admin.module';
+
 
 
 
@@ -31,8 +33,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     AdminIndexComponent
   ],
   imports: [
-    FormsModule, 
     ReactiveFormsModule,
+    AdminModule,
+    FormsModule, 
     BrowserModule,
     HttpClientModule,
     AppRoutingModule,

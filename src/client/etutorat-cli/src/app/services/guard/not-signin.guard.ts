@@ -17,8 +17,8 @@ export class NotSigninGuard implements CanActivate {
     return this.as.checkSignin().pipe(map(
       res => {
         console.log("checkSign OK, donc navigation vers Index")
-        var tree = this.router.parseUrl('/');
-        return tree;
+        //var tree = this.router.parseUrl("");
+        return this.router.parseUrl("index");
         
       }),
       catchError(error => {

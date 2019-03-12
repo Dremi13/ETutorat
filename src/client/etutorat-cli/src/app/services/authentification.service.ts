@@ -29,6 +29,11 @@ export class AuthentificationService {
   }
 
 
+  adminSignin(signinForm){
+    return this.http.post<Token>(environment.API_URL+"/auth/"+environment.API_ADMIN, signinForm, {withCredentials: true})
+  }
+
+
   register(registerForm){
     return this.http.post<Token>(environment.API_URL+"/auth/register/tuteur", registerForm, {withCredentials: true})
   }

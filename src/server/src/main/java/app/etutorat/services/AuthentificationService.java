@@ -13,8 +13,11 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import app.etutorat.dao.AdminRepository;
+import app.etutorat.dao.SuperAdminRepository;
 import app.etutorat.dao.TuteurRepository;
 import app.etutorat.dao.TutoreRepository;
+import app.etutorat.models.Administrateur;
 import app.etutorat.models.Etudiant;
 import app.etutorat.models.Tuteur;
 import app.etutorat.models.Utilisateur;
@@ -34,6 +37,12 @@ public class AuthentificationService {
 	
 	@Autowired
 	private TutoreRepository tor;
+	
+	@Autowired
+	private AdminRepository ar;
+	
+	@Autowired
+	private SuperAdminRepository sar;
 	
 	
 	@Autowired
@@ -70,7 +79,7 @@ public class AuthentificationService {
 			if(etu == null) {
 				etu = tor.findByCodeetu(form.getLogin());
 				if(etu == null) {
-					throw new WrongLoginPasswordException(form.getLogin() + " lol " + form.getPassword());
+					throw new WrongLoginPasswordException(form.getLogin());
 				}
 				else {
 					if(!checkPassword(form.getPassword(),etu)) throw new WrongLoginPasswordException(form.getLogin());
@@ -78,11 +87,53 @@ public class AuthentificationService {
 				}
 			}
 			else {
-				if(!checkPassword(form.getPassword(),etu)) throw new WrongLoginPasswordException(form.getLogin()+" "+form.getPassword());
+				if(!checkPassword(form.getPassword(),etu)) throw new WrongLoginPasswordException(form.getLogin());
 				token.setType("tuteur");
 			}
 			
 			token.setLogin(etu.getCodeetu());
+			this.httpSession.setAttribute("token", token);
+		
+		} catch(NoSuchProviderException | NoSuchAlgorithmException ex) {
+			//Grosse erreur
+			ex.printStackTrace();
+		}
+		
+		
+		return token;
+	}
+	
+	
+	public UserToken adminSignin(SigninForm form) throws WrongLoginPasswordException {
+		
+		
+		Utilisateur admin;
+		UserToken token = new UserToken();
+
+		admin = ar.findByEmail(form.getLogin());
+		
+		
+		try {
+			
+			
+			if(admin == null) {
+				admin = sar.findByEmail(form.getLogin());
+				
+				if(admin == null) {
+					System.out.println("NULL");
+					throw new WrongLoginPasswordException(form.getLogin());
+				}
+				else {
+					if(!checkPassword(form.getPassword(),admin)) throw new WrongLoginPasswordException(form.getLogin());
+					token.setType("superAdmin");
+				}
+			}
+			else {
+				if(!checkPassword(form.getPassword(),admin)) throw new WrongLoginPasswordException(form.getLogin());
+				token.setType("admin");
+			}
+			
+			token.setLogin(admin.getEmail());
 			this.httpSession.setAttribute("token", token);
 		
 		} catch(NoSuchProviderException | NoSuchAlgorithmException ex) {
