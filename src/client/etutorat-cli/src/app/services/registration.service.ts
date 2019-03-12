@@ -11,12 +11,12 @@ import { map, filter, catchError, mergeMap } from 'rxjs/operators';
 })
 export class RegistrationService {
 
-  public apiURL:string="http://localhost:50148/api/Registrations";
   constructor(private httpClient:HttpClient) { }
+
 
   RegisterUser (user:any)
   {
-    return this.httpClient.post(this.apiURL,user)
+    return this.httpClient.post(environment.API_URL+"/register/check", user)
     .pipe(
       map(res => res),
        catchError( this.errorHandler)
@@ -27,3 +27,4 @@ export class RegistrationService {
     return throwError(error);  
 } 
 }
+
