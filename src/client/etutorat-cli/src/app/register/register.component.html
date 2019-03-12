@@ -1,102 +1,132 @@
-<!-- Tab Start Code -->
-    <ngb-tabset>
-        <ngb-tab>
-          <ng-template ngbTabTitle><b>Enregistrer</b> </ng-template>
-          <ng-template ngbTabContent>
-            <br>
-              <form [formGroup]="registrationForm" >
+<form [formGroup]="registrationForm" >
                   <div class="form-group">
                     <div class="row">
+                      
                       <div class="col-md-2">
-                        <label for="" style="color: lightseagreen;font-size: medium;" ><b>Nom d'utilisateur*:</b></label>
+                        <label for="FormControlNom" style="color: lightseagreen;font-size: medium;" ><b>Nom*:</b></label>
                       </div>
                       <div class="col-md-6">
-                        <input type="text" placeholder="Nom utilisateur" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">
+                        <input type="text" formControlName="Nom" placeholder="Nom" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">
                       </div>
+
                       <div class="col-md-4">
                           
-                        <span style="font-weight: bold;color: red;" *ngIf="">
-                          <span *ngIf="">Nom d'utilisateur Requis.</span>
-                          <span *ngIf=""> min 3.</span>
-                          <span *ngIf="">max 50.</span>
+                        <span style="font-weight: bold;color: red;" *ngIf="!registrationForm.controls['nom'].valid&&registrationForm.controls['nom'].dirty">
+                          <span *ngIf="registrationForm.controls.nom.errors.required">Le nom est requis.</span>
+                          <span *ngIf="registrationForm.controls.nom.errors.minlength">min 3 caracteres</span>
+                          <span *ngIf="registrationForm.controls.nom.errors.maxlength">max 50 caracteres.</span>
                         </span>
                        
                       </div>
                     </div>
                     <br>
+
                     <div class="row">
+                      
                       <div class="col-md-2">
-                        <label for="FormControlPassword" style="color: lightseagreen;font-size: medium;" ><b>Mot de passe*:</b></label>
+                        <label for="FormControlNom" style="color: lightseagreen;font-size: medium;" ><b>Prenom*:</b></label>
                       </div>
                       <div class="col-md-6">
-                        <input type="password" placeholder="Password" class="" aria-label="Default" aria-describedby="inputGroup-sizing-default">
+                        <input type="text" formControlName="Prenom" placeholder="Nom" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">
                       </div>
+
                       <div class="col-md-4">
-                          <span style="font-weight: bold;color: red;"  *ngIf="">
-                              <span *ngIf="">Mot de passe.</span>
-                              <span *ngIf="">min 3.</span>
-                              <span *ngIf="">max 50.</span>
-                            </span>
+                          
+                        <span style="font-weight: bold;color: red;" *ngIf="!registrationForm.controls['prenom'].valid&&registrationForm.controls['prenom'].dirty">
+                          <span *ngIf="registrationForm.controls.prenom.errors.required">Le prenom est requis.</span>
+                          <span *ngIf="registrationForm.controls.prenom.errors.minlength">min 3 caracteres</span>
+                          <span *ngIf="registrationForm.controls.prenom.errors.maxlength">max 50 caracteres.</span>
+                        </span>
+                       
                       </div>
                     </div>
                     <br>
+
                     <div class="row">
                       <div class="col-md-2">
                         <label for="FormControlEmail" style="color: lightseagreen;font-size: medium;" ><b>Email*:</b></label>
                       </div>
                       <div class="col-md-6">
-                        <input type="email" placeholder="Email" class="" aria-label="Default" aria-describedby="inputGroup-sizing-default">
+                        <input type="email" formControlName="Email" placeholder="Email" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">
                       </div>
                       <div class="col-md-4">
-                          <span style="font-weight: bold;color: red;" *ngIf="">
-                              <span *ngIf="">Email Rquis.</span>
-                              <span *ngIf="">Email est incorrect.</span>
+                          <span style="font-weight: bold;color: red;" *ngIf="!registrationForm.controls['email'].valid&&registrationForm.controls['email'].dirty">
+                              <span *ngIf="registrationForm.controls.email.errors.required">Email est requis.</span>
+                              <span *ngIf="registrationForm.controls.email.errors.email">Email est incorrect.</span>
                             </span>
                       </div>
                     </div>
                     <br>
-                    <div class="row">
-                      <div class="col-md-2">
-                        <label for="" style="color: lightseagreen;font-size: medium;" ><b>Role*:</b></label>
-                      </div>
-                      <div class="col-md-6">
-                        
-                        <select  class="" id="">
-                          <option [ngValue]="undefined">Selectionner son role</option>
-                          <option>Etudiant</option>
-                          <option>Tuteur</option>
-                          <option>Tutoré</option>
-                          <option></option>
-                        </select>
-                      </div>
-                      <div class="col-md-4">
-                          <span style="font-weight: bold;color: red;" *ngIf="">
-                              <span *ngIf="">Le role est requis.</span>
-                            </span>
-                      </div>
-                    </div>
-                    <br>
-                    <div class="row">
-                      <div class="col-md-2">
-                        <label for="" style="color: lightseagreen;font-size: medium;" ><b>Numero de tel*:</b></label>
-                      </div>
-                      <div class="col-md-6">
-                        <input type="text" class="" aria-label="Default" aria-describedby="inputGroup-sizing-default">
-                      </div>
-                      <div class="col-md-4">
-                          <span style="font-weight: bold;color: red;" *ngIf="">
-                              <span *ngIf="">Numero de tel requis.</span>
-                            </span>
-                      </div>
-                    </div>
-                    <br>
-                   
-                  </div>
-                  <button type="button" style="margin-left: 39%;" [disabled]="" class="btn btn-outline-success" (click)=""><b>Enregistrer</b></button>
-                </form>
 
-          </ng-template>
-        </ngb-tab>
-      </ngb-tabset>
-      <!-- Tab End Code -->
-  
+                    <div class="row">
+                      <div class="col-md-2">
+                        <label for="FormControlPassword" style="color: lightseagreen;font-size: medium;" ><b>Password*:</b></label>
+                      </div>
+                      <div class="col-md-6">
+                        <input type="password" formControlName="Password" placeholder="Password" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">
+                      </div>
+                      <div class="col-md-4">
+                          <span style="font-weight: bold;color: red;"  *ngIf="!registrationForm.controls['password'].valid&&registrationForm.controls['password'].dirty">
+                              <span *ngIf="registrationForm.controls.password.errors.required">Password est requis.</span>
+                              <span *ngIf="registrationForm.controls.password.errors.minlength">min 3 caracteres.</span>
+                              <span *ngIf="registrationForm.controls.password.errors.maxlength">max 50 caracteres.</span>
+                            </span>
+                      </div>
+                    </div>
+                    <br>
+
+                    <div class="row">
+                      
+                      <div class="col-md-2">
+                        <label for="FormControlCodeetu" style="color: lightseagreen;font-size: medium;" ><b>Code etudiant*:</b></label>
+                      </div>
+                      <div class="col-md-6">
+                        <input type="text" formControlName="Codeetu" placeholder="Codeetu" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">
+                      </div>
+
+                      <div class="col-md-4">
+                          
+                        <span style="font-weight: bold;color: red;" *ngIf="!registrationForm.controls['codeetu'].valid&&registrationForm.controls['codeetu'].dirty">
+                          <span *ngIf="registrationForm.controls.codeetu.errors.required">Le code etudiant est requis.</span>
+                          <span *ngIf="registrationForm.controls.codeetu.errors.minlength">min 3 caracteres</span>
+                          <span *ngIf="registrationForm.controls.codeetu.errors.maxlength">max 50 caracteres.</span>
+                        </span>
+                       
+                      </div>
+                    </div>
+                    <br>
+                    
+                    <div class="row">
+                      <div class="col-md-2">
+                        <label for="FormControlTelephone" style="color: lightseagreen;font-size: medium;" ><b>Telephone*:</b></label>
+                      </div>
+                      <div class="col-md-6">
+                        <input type="text" formControlName="Telephone" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">
+                      </div>
+                      <div class="col-md-4">
+                          <span style="font-weight: bold;color: red;" *ngIf="!registrationForm.controls['telephone'].valid&&registrationForm.controls['telephone'].dirty">
+                              <span *ngIf="registrationForm.controls.telephone.errors.required">Telephone requis.</span>
+                            </span>
+                      </div>
+                    </div>
+                    <br>
+
+                    <div class="row">
+                      <div class="col-md-2">
+                        <label for="FormControlFiliere" style="color: lightseagreen;font-size: medium;" ><b>Filiere*:</b></label>
+                      </div>
+                      <div class="col-md-6">
+                        <input type="text" formControlName="Filiere" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">
+                      </div>
+                      <div class="col-md-4">
+                          <span style="font-weight: bold;color: red;" *ngIf="!registrationForm.controls['filiere'].valid&&registrationForm.controls['filiere'].dirty">
+                              <span *ngIf="registrationForm.controls.filiere.errors.required">Filiere requise.</span>
+                            </span>
+                      </div>
+                    </div>
+                    <br>
+                    
+                    
+                  </div>
+                  <button type="button" style="margin-left: 39%;" [disabled]="!registrationForm.valid" class="btn btn-outline-success" (click)="OnRegister(registrationForm.value)"><b>Enregisterer</b></button>
+</form>
