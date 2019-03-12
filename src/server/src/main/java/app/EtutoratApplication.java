@@ -7,7 +7,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import app.etutorat.dao.SuperAdminRepository;
-import app.etutorat.models.SuperAdminstrateur;
+import app.etutorat.models.SuperAdministrateur;
 import app.etutorat.services.AuthentificationService;
 
 @SpringBootApplication(scanBasePackages = {"app"})
@@ -32,7 +32,7 @@ public class EtutoratApplication implements ApplicationRunner {
 		
 	
 		byte[][] r = as.hashPassword("root");
-		SuperAdminstrateur sa = new SuperAdminstrateur("Root","admin","admin.root@root.com",r[1],r[0]);
+		SuperAdministrateur sa = new SuperAdministrateur("Root","admin","admin.root@root.com",r[1],r[0]);
 		sar.save(sa);
 
 	}
