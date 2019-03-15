@@ -24,6 +24,16 @@ public interface SeanceRepository extends JpaRepository<Seance, Long> {
 	//Sameshit que findByCompetences
 	//public List<Seance> findByTutores(Tutore tutore);
 
+	@Query("SELECT s.sujet " 					+
+	           "FROM " 					+
+	           "    Seance s"
+	        	)
+	public List<Seance> findByIdTutore(Tutore tutore);
+	
+	@Query("SELECT s " 					+
+	           "FROM " 					+
+	           "    Seance s where s.tuteur = :tuteur ")                 
+	public List<Seance> findByIdTuteur(Tuteur tuteur);
 	
 	@Query("SELECT s " 				+
 	           "FROM " 				+
