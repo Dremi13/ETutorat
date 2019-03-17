@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import app.etutorat.models.Salle;
@@ -20,25 +21,22 @@ public interface SeanceRepository extends JpaRepository<Seance, Long> {
 	public List<Seance> findByDate(Date date);
 	public List<Seance> findByOutilAV(String outilav);
 	public List<Seance> findBySalle(Salle salle);
-	@Query("SELECT s " 					+
-	           "FROM " 					+
-	           "    Seance s " 			+
-	           "WHEN" 					+
-	           "s.tuteur like  tuteur " +
-	           "GROUP BY " 				+
-	           "    s.id "			)
-	public List<Seance> findByTuteur(Tuteur tuteur);
 	
-	//Sameshit que findByCompetences
+	
 	@Query("SELECT s " 					+
 	           "FROM " 					+
-	           "    Seance s " 			+
-	           "WHEN" 					+
-	           "s.tutore like  tutore " +
-	           "GROUP BY " 				+
-	           "    s.id "			)
-	public List<Seance> findByTutores(Tutore tutore);
-
+	           "Seance s  join fetch s.tutores c where c.id  =:id"
+	        	)
+	public List<Seance> findByIdTutore( @Param("id")  Long id);
+	
+	
+	
+	
+	@Query("SELECT s " 					+
+	           "FROM " 					+
+	           "    Seance s where s.tuteur.id = :id ")                 
+	public List<Seance> findByIdTuteur(@Param("id")  Long id);
+	
 	
 	@Query("SELECT s " 				+
 	           "FROM " 				+
@@ -50,4 +48,10 @@ public interface SeanceRepository extends JpaRepository<Seance, Long> {
 	           "HAVING " 			+
 	           "	count(t) < s.nbmaxtutores")
 	public List<Seance> findSeancesDisponibles();
+	
+	@Query("SELECT s " 				+
+	           "FROM " 				+
+	           "    Seance s ")
+	public List<Seance> findAllSeances();
+	
 }
