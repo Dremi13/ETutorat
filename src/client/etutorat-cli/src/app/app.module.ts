@@ -13,6 +13,8 @@ import { PageNotFoundComponent } from './pagenotfound/pagenotfound.component';
 import { RegisterComponent } from './register/register.component';
 import { IndexComponent } from './index/index.component';
 
+import { ListeseanceComponent } from './listeseance/listeseance.component';
+
 
 
 
@@ -25,7 +27,8 @@ import { IndexComponent } from './index/index.component';
     HeaderComponent,
     PageNotFoundComponent,
     RegisterComponent,
-    IndexComponent
+    IndexComponent,
+    ListeseanceComponent
   ],
   imports: [
     FormsModule, 
