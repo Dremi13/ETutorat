@@ -1,0 +1,20 @@
+<ngb-tabset [justify]="'center'">
+    <ngb-tab>
+        <ng-template ngbTabTitle><h3>Liste des comptes</h3></ng-template>
+        <ng-template ngbTabContent>
+            <app-user-list></app-user-list>
+        </ng-template>
+    </ngb-tab>
+
+    <ngb-tab>
+        <ng-template ngbTabTitle><h3>Création de comptes</h3></ng-template>
+        <ng-template ngbTabContent>
+            <app-create-user></app-create-user>
+        
+        </ng-template>
+    </ngb-tab>
+</ngb-tabset>
+
+
+
+

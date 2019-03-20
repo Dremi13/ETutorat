@@ -27,6 +27,13 @@ public class Salle implements Serializable {
 	
 	public Salle() {}
 	
+	public Salle(String nom, String batiment, String site, int capacite) {
+		this.nom = nom;
+		this.batiment = batiment;
+		this.site = site;
+		this.capacite = capacite;
+	}
+	
 	public Long getId() {
 		return id;
 	}

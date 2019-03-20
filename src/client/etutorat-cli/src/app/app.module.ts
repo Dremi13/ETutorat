@@ -12,6 +12,10 @@ import { HeaderComponent } from './header/header.component';
 import { PageNotFoundComponent } from './pagenotfound/pagenotfound.component';
 import { RegisterComponent } from './register/register.component';
 import { IndexComponent } from './index/index.component';
+import { AdminIndexComponent } from './admin/admin-index/admin-index.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { AdminModule } from './admin/admin.module';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 
 
@@ -25,14 +29,19 @@ import { IndexComponent } from './index/index.component';
     HeaderComponent,
     PageNotFoundComponent,
     RegisterComponent,
-    IndexComponent
+    IndexComponent,
+    AdminIndexComponent
   ],
   imports: [
-    FormsModule, 
+    NgbModule,
     ReactiveFormsModule,
+    AdminModule,
+    FormsModule, 
     BrowserModule,
     HttpClientModule,
-    AppRoutingModule
+    AppRoutingModule,
+    BrowserAnimationsModule,
+    
     
   ],
   providers: [],

@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
-import { FormGroup, FormControl } from '@angular/forms';
-import { Validators } from '@angular/forms';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { AuthentificationService } from '../services/authentification.service';
@@ -17,9 +16,10 @@ export class LoginComponent {
                 private router : Router) {}
 
   signinForm = new FormGroup({
-    login: new FormControl('', [Validators.required, Validators.minLength(9), Validators.maxLength(9)]),
+    login: new FormControl('', [Validators.required, Validators.pattern('[a-z][0-9]{8}')]),
     password: new FormControl('', [Validators.required, Validators.minLength(4), Validators.maxLength(16)])
-  })
+  });
+  
  
   get login() { return this.signinForm.get('login'); }
   get password() { return this.signinForm.get('password'); }
@@ -29,7 +29,7 @@ export class LoginComponent {
     this.as.signin(this.signinForm.value)
     .subscribe(
       (resp: Token) => {
-        this.as.addTokenToStorage(resp);
+        this.as.addToken(resp);
         this.router.navigate(['/']);
       },
       error => {
@@ -37,7 +37,7 @@ export class LoginComponent {
           
           alert(error.message);
           
-          //this.router.navigate(['/login']);
+          //this.router.navigate(['/signin']);
         }
       });;
   }

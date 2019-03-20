@@ -1,12 +1,38 @@
-<div class="navbar-fixed">
-  <nav>
-    <div class="nav-wrapper">
-      <a>Logo</a>
-      <ul class="right hide-on-med-and-down">
-        <li><a>Login</a></li>
-        <li><a>Components</a></li>
+<nav class="navbar navbar-expand-lg navbar-light shadow p-3 mb-5 rounded" style="background-color: #e3f2fd;">
+    
+
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <a routerLink="/" class="navbar-brand"><sup>E</sup>tutorat</a>
+  <div class="collapse navbar-collapse" id="navbarNav" [ngSwitch]="type">
+    
+      <ul class="navbar-nav" *ngSwitchCase="'superAdmin'">
+        <li class="nav-item"><a class="nav-link" routerLink="/{{API_admin}}/">Index</a></li>
+        <li class="nav-item"><a class="nav-link" routerLink="/{{API_admin}}/admins">AdminManager</a></li>
+        <li class="nav-item"><a class="nav-link" routerLink="/{{API_admin}}/users">UserManager</a></li>
+        <li class="nav-item"><a class="nav-link" routerLink="/{{API_admin}}/seance">SeanceManager</a></li>
+        <li class="nav-item"><a class="nav-link" (click)="signout()">Sign Out</a></li>
       </ul>
-    </div>
-  </nav>
-</div>
+      <ul class="navbar-nav" *ngSwitchCase="'admin'">
+        <li class="nav-item"><a class="nav-link" routerLink="/">Index</a></li>
+        <li class="nav-item"><a class="nav-link" routerLink="/{{API_admin}}/users">UserManager</a></li>
+        <li class="nav-item"><a class="nav-link" (click)="signout()">Sign Out</a></li>
+      </ul>
+      <ul class="navbar-nav" *ngSwitchCase="'signout'">
+        <li class="nav-item"><a class="nav-link" routerLink="/signin">Sign in</a></li>
+        <li class="nav-item"><a class="nav-link" routerLink="/register">Register</a></li>
+      </ul>
+          
+      <ul class="navbar-nav" *ngSwitchDefault>
+        <li class="nav-item"><a class="nav-link" routerLink="/">Index</a></li>
+        <li class="nav-item"><a class="nav-link" (click)="signout()">Sign Out</a></li>
+      </ul>
+    
+    
+    
+  </div>
+
+</nav>
       

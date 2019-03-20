@@ -1,7 +1,6 @@
 package app.etutorat.models;
 
 
-import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Lob;
@@ -14,7 +13,7 @@ import javax.persistence.MappedSuperclass;
 
 
 @MappedSuperclass
-public abstract class Utilisateur implements Serializable {
+public abstract class Utilisateur {
 
 	
 

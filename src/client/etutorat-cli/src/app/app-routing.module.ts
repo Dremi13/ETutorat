@@ -6,18 +6,34 @@ import { PageNotFoundComponent } from './pagenotfound/pagenotfound.component';
 import { RegisterComponent } from './register/register.component';
 import { IndexComponent } from './index/index.component';
 
+import { SigninGuard } from './services/guard/signin.guard';
+import { NotSigninGuard } from './services/guard/not-signin.guard';
+
 
 const appRoutes: Routes = [
-    {
-      path: 'login',
-      component: LoginComponent
-    },
+
+    
     { path: '',
-      component: IndexComponent
+      component: IndexComponent,
+      canActivate: [SigninGuard]
     },
+    {
+      path: 'index',
+      redirectTo: '',
+      pathMatch: 'full'
+    },
+    {
+      path: 'signin',
+      component: LoginComponent,
+      canActivate: [NotSigninGuard]
+    },
+    
     { path: 'register',
-      component: RegisterComponent
+      component: RegisterComponent,
+      canActivate: [NotSigninGuard]
     },
+    
+
     { path: '**', component: PageNotFoundComponent }
   ];
   

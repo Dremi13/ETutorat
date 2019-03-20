@@ -1,0 +1,15 @@
+<ngb-tabset [justify]="'center'">
+    <ngb-tab>
+        <ng-template ngbTabTitle><h3>Création de comptes administrateurs</h3></ng-template>
+        <ng-template ngbTabContent>
+            <app-create-admin></app-create-admin>
+    
+        </ng-template>
+    </ngb-tab>
+    <ngb-tab>
+            <ng-template ngbTabTitle><h3>Liste des comptes administrateurs</h3></ng-template>
+            <ng-template ngbTabContent>
+                <app-admin-list></app-admin-list>
+            </ng-template>
+    </ngb-tab>
+</ngb-tabset>
