@@ -1,0 +1,10 @@
+﻿<h1>Salut {{currentUser.prenom}}!</h1>
+<h3>Tout les utilisateur:</h3>
+<div>
+    <ul *ngFor="let user of users">
+    	<p> L'étudiant avec l'identifiant : {{user.id}}</p>
+        Mail : {{user.email}} ,  Nom : {{user.nom}} ,  Prenom: {{user.prenom}}<br>
+        Code : {{user.codeetu}} ,  Telephone : {{user.telephone}} ,  Filière: {{user.filiere}}<br>
+        <a (click)="deleteUser(user.id)" class="text-danger">Supprimer</a>
+    </ul>
+</div>

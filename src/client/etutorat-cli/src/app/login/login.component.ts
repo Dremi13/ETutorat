@@ -1,48 +1,61 @@
-import { Component } from '@angular/core';
-import { FormGroup, FormControl } from '@angular/forms';
-import { Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+﻿import { Component, OnInit } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { first } from 'rxjs/operators';
 
-import { AuthentificationService } from '../services/authentification.service';
-import { Token } from '../responseBodies/token';
+import { AlertService, AuthenticationService } from '@app/_services';
 
-@Component({
-  selector: 'app-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
-})
-export class LoginComponent {
+@Component({templateUrl: 'login.component.html'})
+export class LoginComponent implements OnInit {
+    loginForm: FormGroup;
+    loading = false;
+    submitted = false;
+    returnUrl: string;
 
-  constructor ( private as: AuthentificationService,
-                private router : Router) {}
-
-  signinForm = new FormGroup({
-    login: new FormControl('', [Validators.required, Validators.minLength(9), Validators.maxLength(9)]),
-    password: new FormControl('', [Validators.required, Validators.minLength(4), Validators.maxLength(16)])
-  })
- 
-  get login() { return this.signinForm.get('login'); }
-  get password() { return this.signinForm.get('password'); }
-  
-  onSubmit(){
-
-    this.as.signin(this.signinForm.value)
-    .subscribe(
-      (resp: Token) => {
-        this.as.addTokenToStorage(resp);
-        this.router.navigate(['/']);
-      },
-      error => {
-        if(error.status == 404){
-          
-          alert(error.message);
-          
-          //this.router.navigate(['/login']);
+    constructor(
+        private formBuilder: FormBuilder,
+        private route: ActivatedRoute,
+        private router: Router,
+        private authenticationService: AuthenticationService,
+        private alertService: AlertService
+    ) {
+        // redirect to home if already logged in
+        if (this.authenticationService.currentUserValue) { 
+            this.router.navigate(['/']);
         }
-      });;
-  }
+    }
 
-  
-  
+    ngOnInit() {
+        this.loginForm = this.formBuilder.group({
+            email: ['', Validators.required],
+            password: ['', Validators.required]
+        });
 
+        // get return url from route parameters or default to '/'
+        this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+    }
+
+    // convenience getter for easy access to form fields
+    get f() { return this.loginForm.controls; }
+
+    onSubmit() {
+        this.submitted = true;
+
+        // stop here if form is invalid
+        if (this.loginForm.invalid) {
+            return;
+        }
+
+        this.loading = true;
+        this.authenticationService.login(this.f.email.value, this.f.password.value)
+            .pipe(first())
+            .subscribe(
+                data => {
+                    this.router.navigate([this.returnUrl]);
+                },
+                error => {
+                    this.alertService.error(error);
+                    this.loading = false;
+                });
+    }
 }
