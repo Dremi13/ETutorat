@@ -5,13 +5,30 @@ import { AdminIndexComponent } from './admin-index/admin-index.component';
 import { environment } from '../../environments/environment';
 import { AdminSigninComponent } from './admin-signin/admin-signin.component';
 import { AdminNotsigninGuard } from './guard/admin-notsignin.guard';
+import { AdminManagerComponent } from './admin-manager/admin-manager.component';
+import { UserManagerComponent } from './user-manager/user-manager.component';
+import { AdminSeanceComponent } from './admin-seance/admin-seance.component';
 
 
 const routes: Routes = [
   {
     path: environment.API_ADMIN,
     component: AdminIndexComponent,
-    canActivate: [AdminGuard]
+    canActivate: [AdminGuard],
+    children: [
+      {
+        path: "admins",
+        component: AdminManagerComponent
+      },
+      {
+        path: "users",
+        component: UserManagerComponent
+      },
+      {
+        path: "seance",
+        component: AdminSeanceComponent
+      }
+    ]
   },
   {
     path: environment.API_ADMIN+"/index",

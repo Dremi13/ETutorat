@@ -1,0 +1,42 @@
+<form [formGroup]="createAdminForm" (ngSubmit)="onSubmit()">
+  
+<div class="row">
+  <div class="form-group col-md-3">
+    <label for="surnameInput">Nom :</label>  
+    <input id="surnameInput" class="form-control" type="text" formControlName="nom" required>
+    
+  </div>
+
+  <div class="form-group col-md-3">
+    <label for="firstnameInput">Prenom :</label>  
+    <input id="firstnameInput" class="form-control" type="text" formControlName="prenom" required>
+  </div>
+</div>
+
+
+<div class="row">
+  <div class="form-group col-md-3">
+    <label for="emailInput">Email :</label>  
+    <input id="emailInput" class="form-control" type="text" formControlName="email" required>
+  </div>
+
+
+  <div class="form-group col-md-3">
+    <label for="passwordInput">Mot de passe :</label>  
+    <input id="passwordInput" class="form-control" type="password" formControlName="password" required>
+  </div>
+</div>
+
+  
+  <button type="submit" class="btn btn-outline-primary" [disabled]="!createAdminForm.valid">Créer un compte administrateur</button>
+</form>
+
+<ngb-alert *ngIf="alertOpened" type="success" (close)="alertOpened = false">Le compte administrateur {{adminCreated}} a bien été créé.</ngb-alert>
+
+<ngb-alert  *ngIf="wrongFormAlertOpened" type="danger" (close)="wrongFormAlertOpened = false">
+
+  <div *ngFor="let champ of alreadyUse; index as i">{{champ}} associé à un autre compte !</div>
+
+</ngb-alert>
+
+

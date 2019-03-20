@@ -1,0 +1,61 @@
+<form [formGroup]="createTutoreForm" (ngSubmit)="onSubmit()">
+  
+  <div class="row justify-content-center">
+    <div class="form-group col-md-3">
+      <label for="surnameInput">Nom :</label>  
+      <input id="surnameInput" class="form-control" type="text" formControlName="nom" required>
+    </div>
+  
+    <div class="form-group col-md-3">
+      <label for="firstnameInput">Prenom :</label>  
+      <input id="firstnameInput" class="form-control" type="text" formControlName="prenom" required>
+    </div>
+    
+    <div class="form-group col-md-3">
+      <label for="codeetuInput">Code étudiant :</label>  
+      <input id="codeetuInput" class="form-control" type="text" formControlName="codeetu" required>
+    </div>
+
+
+  </div>
+  
+  <div class="row justify-content-center">
+    <div class="form-group col-md-4">
+      <label for="telephoneInput">Telephone :</label>  
+      <input id="telephoneInput" class="form-control" type="text" formControlName="telephone" required>
+    </div>
+  
+  
+    <div class="form-group col-md-4">
+      <label for="filiereInput">Filière :</label>  
+      <input id="filiereInput" class="form-control" type="text" formControlName="filiere" required>
+    </div>
+  </div>
+  
+  <div class="row justify-content-center">
+    <div class="form-group col-md-4">
+      <label for="emailInput">Email :</label>  
+      <input id="emailInput" class="form-control" type="text" formControlName="email" required>
+    </div>
+  
+  
+    <div class="form-group col-md-4">
+      <label for="passwordInput">Mot de passe :</label>  
+      <input id="passwordInput" class="form-control" type="password" formControlName="password" required>
+    </div>
+  </div>
+
+    <div class="row justify-content-center">
+      <button type="submit" class="btn btn-outline-primary" [disabled]="!createTutoreForm.valid">Créer le compte</button>
+    </div>
+</form>
+
+<ngb-alert *ngIf="alertOpened" type="success" (close)="alertOpened = false">Le compte Tutore {{tuteurCreated}} a bien été créé.</ngb-alert>
+
+<ngb-alert  *ngIf="wrongFormAlertOpened" type="danger" (close)="wrongFormAlertOpened = false">
+
+    <div *ngFor="let champ of alreadyUse; index as i">{{champ}} associé à un autre compte !</div>
+  
+</ngb-alert>
+  
+  

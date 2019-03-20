@@ -1,0 +1,96 @@
+<div class="card">
+  <div class="card-body">
+  
+    <div class="row">
+      <ul class="list-group col-3" id="myList" role="tablist">
+        
+          <a [attr.aria-expanded]="isCollapsed" aria-controls="collapse" aria-hidden="true"></a>
+          <li *ngFor="let admin of admins; index as i">
+            <a (click)="onClick(i)" [ngClass]="{'active' : (currentAdmin != null) && (admin.id == currentAdmin.id)}" class="list-group-item list-group-item-action"  [attr.aria-expanded]="isCollapsed" aria-controls="collapse">{{admin.nom}}</a>
+          </li>
+        
+      </ul>
+
+      <div id="collapse" [ngbCollapse]="isCollapsed" *ngIf="currentAdmin != null">
+        <div class="card">
+          <div class="card-body" >
+            <h5 class="card-title">Numéro de compte : {{currentAdmin.id}}
+              <button type="button" class="close" aria-label="Close" (click)="openRemoveAdminModal(removeModal)">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </h5>
+            <div id="information" class="pb-2 border-bottom">
+                Nom : {{currentAdmin.nom}} <br>
+                Prénom : {{currentAdmin.prenom}} <br>
+                Email : {{currentAdmin.email}} <br>
+                
+                
+              </div>
+
+              <div id="btnUpdateModal" class="row justify-content-center mt-3 pb-3 border-bottom">
+                  <button type="button" class="btn btn-secondary" (click)="openUpdateTuteurModal(updateModal)">Modifier</button>
+              </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #removeModal let-modal>
+ 
+  <div class="modal-body">
+    <h3>Voulez-vous supprimer le compte administrateur de :</h3><button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')"><span aria-hidden="true">&times;</span></button>
+    <p>{{currentAdmin.prenom}} {{currentAdmin.nom}} - {{currentAdmin.email}}</p>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark" (click)="modal.close('oui')">Oui</button>
+    <button type="button" class="btn btn-outline-dark" (click)="modal.dismiss('non')">Non</button>
+  </div>
+</ng-template>
+
+<ng-template #updateModal let-modal>
+ 
+    <div class="modal-body">
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+
+      <form [formGroup]="updateAdminForm" (ngSubmit)="modal.close('update')" *ngIf="currentAdmin != null">
+  
+          <div class="row">
+            <div class="form-group col-md-3">
+              <label for="surnameInput">Nom :</label>  
+              <input id="surnameInput" class="form-control" type="text" formControlName="nom" required>
+              
+            </div>
+          
+            <div class="form-group col-md-3">
+              <label for="firstnameInput">Prenom :</label>  
+              <input id="firstnameInput" class="form-control" type="text" formControlName="prenom" required>
+            </div>
+          </div>
+          
+          
+          <div class="row">
+            <div class="form-group col-md-3">
+              <label for="emailInput">Email :</label>  
+              <input id="emailInput" class="form-control" type="text" formControlName="email" required>
+            </div>
+          
+          
+            <div class="form-group col-md-3">
+              <label for="passwordInput">Mot de passe :</label>  
+              <input id="passwordInput" class="form-control" type="password" formControlName="password" required>
+            </div>
+          </div>
+          
+            
+            <button type="submit" class="btn btn-outline-primary" [disabled]="!updateAdminForm.valid">Modifier le compte administrateur</button>
+          </form>
+
+    </div>
+  </ng-template>
+  
+

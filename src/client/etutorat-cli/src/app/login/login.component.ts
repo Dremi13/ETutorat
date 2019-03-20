@@ -16,7 +16,7 @@ export class LoginComponent {
                 private router : Router) {}
 
   signinForm = new FormGroup({
-    login: new FormControl('', [Validators.required, Validators.minLength(9), Validators.maxLength(9)]),
+    login: new FormControl('', [Validators.required, Validators.pattern('[a-z][0-9]{8}')]),
     password: new FormControl('', [Validators.required, Validators.minLength(4), Validators.maxLength(16)])
   });
   

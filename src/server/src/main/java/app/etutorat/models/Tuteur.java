@@ -1,26 +1,29 @@
 package app.etutorat.models;
 
-import java.util.Set;
 
+import java.io.Serializable;
+import java.util.List;
+
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 
 @Entity
-public class Tuteur extends Etudiant {
+public class Tuteur extends Etudiant implements Serializable {
 
 	
 	
 	private static final long serialVersionUID = 2L;
 	
 
-	@ManyToMany
+	/*@ManyToMany
 	@JoinTable(
 			   name="competences",
 			   joinColumns=@JoinColumn(name="TUTEUR_ID", referencedColumnName="id"),
 			   inverseJoinColumns=@JoinColumn(name="MAT_ID", referencedColumnName="id"))
-	private Set<Matiere> domaineDeCompetences;
+	private Set<Matiere> domaineDeCompetences;*/
+	
+	@ElementCollection
+	private List<String> domaineDeCompetences;
 	
 	
 	private boolean validationcompte;
@@ -38,7 +41,7 @@ public class Tuteur extends Etudiant {
 			String codeetu,
 			String telephone,
 			String filiere,
-			Set<Matiere> domaineDeCompetences, 
+			List<String> domaineDeCompetences, 
 			boolean validationcompte) 
 	{
 		super(nom, prenom, email, password, salt, codeetu, telephone, filiere);
@@ -60,6 +63,7 @@ public class Tuteur extends Etudiant {
 			boolean validationcompte) 
 	{
 		super(nom, prenom, email, password, salt, codeetu, telephone, filiere);
+		this.domaineDeCompetences = null;
 		this.validationcompte = validationcompte;
 		
 		
@@ -76,24 +80,35 @@ public class Tuteur extends Etudiant {
 			String filiere) 
 	{
 		super(nom, prenom, email, password, salt, codeetu, telephone, filiere);
-		
+		this.domaineDeCompetences = null;
+		this.validationcompte = false;
 		
 	}
 	
 	
-	public Set<Matiere> getDomaineDeCompetences() {
+	
+	
+	public List<String> getDomaineDeCompetences() {
 		return domaineDeCompetences;
 	}
-	public void setDomaineDeCompetences(Set<Matiere> domaineDeCompetences) {
+
+
+	public void setDomaineDeCompetences(List<String> domaineDeCompetences) {
 		this.domaineDeCompetences = domaineDeCompetences;
 	}
-	
-	public boolean isValidationCompte() {
+
+
+	public boolean getValidationcompte() {
 		return validationcompte;
 	}
-	public void setValidationCompte(boolean validationCompte) {
-		this.validationcompte = validationCompte;
+
+
+	public void setValidationcompte(boolean validationcompte) {
+		this.validationcompte = validationcompte;
 	}
+
+
+
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}

@@ -1,6 +1,5 @@
 package app.etutorat.dao;
 
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -16,7 +15,6 @@ public interface SeanceRepository extends JpaRepository<Seance, Long> {
 
 	
 	
-	public List<Seance> findByDate(Date date);
 	public List<Seance> findByOutilAV(String outilav);
 	public List<Seance> findBySalle(Salle salle);
 	public List<Seance> findByTuteur(Tuteur tuteur);

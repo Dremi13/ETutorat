@@ -16,11 +16,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.server.ResponseStatusException;
 
 import app.etutorat.models.requestobjects.UserToken;
-import app.etutorat.models.requestobjects.RegisterTuteurForm;
-import app.etutorat.models.requestobjects.SigninForm;
+import app.etutorat.models.requestobjects.forms.EtudiantForm;
+import app.etutorat.models.requestobjects.forms.SigninForm;
 import app.etutorat.services.AuthentificationService;
 import app.exceptions.WrongLoginPasswordException;
-import app.exceptions.BadRegisterFormException;
+import app.exceptions.formException.BadRegisterFormException;
+import app.exceptions.formException.BadSigninFormException;
 import app.exceptions.UserNotSignedInException;
 
 @Controller
@@ -30,94 +31,95 @@ import app.exceptions.UserNotSignedInException;
 public class AuthentificationController {
 
 	
-	  @Autowired
-	  private AuthentificationService as;
-
+	@Autowired
+	private AuthentificationService as;
 
 	  
-	  @GetMapping("/check")
-	  public ResponseEntity<UserToken> checkSignin() {
+	  
+	  
+	@GetMapping("/check")
+	public ResponseEntity<UserToken> checkSignin() {
 	        
-		  
-		  
-		  try {
+		try {
 			  
-			  UserToken token = as.checkSignin();
-			  System.out.println("checkSign OK !");
-			  return ResponseEntity.ok(token);
-		  }
+			UserToken token = as.checkSignin();
+			System.out.println("checkSign OK !");
+			return ResponseEntity.ok(token);
+		}
+		catch (UserNotSignedInException ex) {
+			System.out.println("checkSign failed");
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not signed in", ex);
+		}
 		  
-		  catch (UserNotSignedInException ex) {
-			  System.out.println("checkSign failed");
-			  throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not signed in", ex);
-		  }
-		  
-	    }
+	}
 	  
-	  @PostMapping("/signin")
-	  public ResponseEntity<UserToken> signin(@RequestBody SigninForm form){
+	@PostMapping("/signin")
+	public ResponseEntity<UserToken> signin(@RequestBody SigninForm form){
 		  
-		  try {
+		try {
+			form.isValid();
+			UserToken token = as.signin(form);
+			return ResponseEntity.ok(token);
+
+		}
+		catch (BadSigninFormException | WrongLoginPasswordException ex) {
+			System.out.println("Sign in failed");
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, ex.getMessage(), ex);
+		}
+	  
+	 }
+	  
+	@PostMapping("/${admin.path}")
+	public ResponseEntity<UserToken> adminSignin(@RequestBody SigninForm form){
+		  
+		try {
+			System.out.println("AdminSign in OK");
+			form.isValid();
+			UserToken token = as.adminSignin(form);
+			return ResponseEntity.ok(token);
 			  
-			  UserToken token = as.signin(form);
-			  System.out.println("Sign in OK");
-			  return ResponseEntity.ok(token);
 			  
-		  }
-		  catch (WrongLoginPasswordException ex) {
-			  System.out.println("Sign in failed");
-			  throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Wrong login/password", ex);
-		  }
-	  
-	  }
-	  
-	  @PostMapping("/${admin.path}")
-	  public ResponseEntity<UserToken> adminSignin(@RequestBody SigninForm form){
-		  
-		  try {
-			  System.out.println("AdminSign in OK");
-			  UserToken token = as.adminSignin(form);
-			  return ResponseEntity.ok(token);
 			  
-		  }
-		  catch (WrongLoginPasswordException ex) {
-			  System.out.println("Sign in failed");
-			  throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Wrong login/password", ex);
-		  }
+		}
+		catch (BadSigninFormException | WrongLoginPasswordException ex) {
+			System.out.println("Sign in failed");
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, ex.getMessage(), ex);
+		}
 	  
-	  }
+	}
 	  
 	  
-	  @GetMapping("/signout")
-	  public ResponseEntity<String> signout(){
+	@GetMapping("/signout")
+	public ResponseEntity<String> signout(){
 		  
-		  System.out.println("Sign out");
-		  try {
-			  as.signout();
-			  return ResponseEntity.ok("");
-		  }
-		  catch (UserNotSignedInException ex) {
-			  throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not signed in", ex);
-		  }
+		
+		try {
+			System.out.println("Sign out");
+			as.signout();
+			return ResponseEntity.ok("");
+		}
+		catch (UserNotSignedInException ex) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not signed in", ex);
+		}
 	  
-	  }
+	}
 	  
-	  @PostMapping("/register/tuteur")
-	  public ResponseEntity<UserToken> register(@RequestBody RegisterTuteurForm form) {
+	@PostMapping("/register/tuteur")
+	public ResponseEntity<UserToken> register(@RequestBody EtudiantForm form) {
 		  
-		  System.out.println("Sign up");
-		  try {
-			  UserToken token = as.register(form);
-			  return ResponseEntity.ok(token);
+		System.out.println("Sign up");
+		try {
+			UserToken token = as.register(form);
+			return ResponseEntity.ok(token);
 			  
-		  }
-		  catch (BadRegisterFormException ex) {
-			  System.out.println("Sign in failed");
-			  throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Wrong login/password", ex);
-		  }
+		}
+		catch (BadRegisterFormException ex) {
+			System.out.println("Sign in failed");
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Wrong login/password", ex);
+		}
 		  
 		  
-	  }
+	}
 	  
 	  
 	  

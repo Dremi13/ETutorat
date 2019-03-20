@@ -1,11 +1,7 @@
 package app.etutorat.services;
 
-import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
-import java.security.SecureRandom;
-import java.util.Arrays;
-import java.util.Random;
 
 import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
@@ -17,15 +13,15 @@ import app.etutorat.dao.AdminRepository;
 import app.etutorat.dao.SuperAdminRepository;
 import app.etutorat.dao.TuteurRepository;
 import app.etutorat.dao.TutoreRepository;
-import app.etutorat.models.Administrateur;
 import app.etutorat.models.Etudiant;
 import app.etutorat.models.Tuteur;
 import app.etutorat.models.Utilisateur;
-import app.etutorat.models.requestobjects.RegisterTuteurForm;
-import app.etutorat.models.requestobjects.SigninForm;
+import app.etutorat.models.requestobjects.forms.EtudiantForm;
+import app.etutorat.models.requestobjects.forms.SigninForm;
+import static app.etutorat.utils.HashPswd.*;
 import app.etutorat.models.requestobjects.UserToken;
 import app.exceptions.WrongLoginPasswordException;
-import app.exceptions.BadRegisterFormException;
+import app.exceptions.formException.BadRegisterFormException;
 import app.exceptions.UserNotSignedInException;
 
 @Service
@@ -49,7 +45,8 @@ public class AuthentificationService {
 	private HttpSession httpSession;
 	
 	
-	private static final Random sr = new SecureRandom();
+	
+	
 	
 	public UserToken checkSignin() throws UserNotSignedInException {
 		
@@ -157,14 +154,9 @@ public class AuthentificationService {
 	
 	
 	//Register des tuteurs
-	public UserToken register(RegisterTuteurForm form) throws BadRegisterFormException {
+	public UserToken register(EtudiantForm form) throws BadRegisterFormException {
 		
-		//Verification des champs
-		if(form.getPassword().length() < 4 || form.getPassword().length() > 16) {
-			throw new BadRegisterFormException("wrong password size");
-		}
-		
-		 
+	
 		UserToken token = new UserToken();
 		
         try {
@@ -188,36 +180,7 @@ public class AuthentificationService {
 	}
 	
 
-	public boolean checkPassword(String password, Utilisateur user) throws NoSuchProviderException, NoSuchAlgorithmException {
-			
-		System.out.println("salt de " + user);
-			
-		MessageDigest md = MessageDigest.getInstance("SHA-256");
-	    md.update(user.getSalt());
-	    byte[] bytes = md.digest(password.getBytes());
-	        
-	    return Arrays.equals(bytes,user.getPassword());
-	        
-	        
-	}	
-		
-		
-	public byte[][] hashPassword(String password) throws NoSuchProviderException, NoSuchAlgorithmException{
-			
-		byte[][] result = new byte[2][];
-		MessageDigest md = MessageDigest.getInstance("SHA-256");
-		result[0] = new byte[16];
-		result[1] = new byte[16];
-			
-		sr.nextBytes(result[0]);;
-			
-			
-        md.update(result[0]);
-        result[1] = md.digest(password.getBytes());
-	        
-        return result;
-		}
-	
+
 	
 
 }

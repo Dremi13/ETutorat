@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 
 import { AuthentificationService } from '../services/authentification.service';
 import { Token } from '../responseBodies/token';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-header',
@@ -11,47 +12,35 @@ import { Token } from '../responseBodies/token';
 })
 export class HeaderComponent implements OnInit {
 
-  isAdmin : boolean;
-  isEtudiant : boolean;
+  API_admin: string;
+  type: string;
+
 
   constructor(private as: AuthentificationService,
               private router: Router) {
-    
+    this.API_admin = environment.API_ADMIN;
   }
+
 
   ngOnInit() {
     
     //Ne s'exécute qu'à l'initialisation. Permet de retrouver le token en cas de chargement forcé.
     this.as.checkSignin().subscribe((token : Token) => {
-      if(token == null){
-        this.isAdmin = false;
-        this.isEtudiant = false;
-      }
-      else if(token.type === "admin" || token.type === "superAdmin"){
-        this.isAdmin = true;
-        this.isEtudiant = false;
-      }
-      else {
-        this.isAdmin = false;
-        this.isEtudiant = true;
-      }
+      
+      console.log(token);
+      if(token === null) this.type = "signout";
+      else              this.type = token.type;
+    },
+    error => {
+      this.type = "signout";
     });
 
     //Permet de traçer le token côté client sans faire d'appel au serveur. (Plus ou moins du data binding)
     this.as.getToken().subscribe((token : Token) =>
     {
-      if(token == null){
-        this.isAdmin = false;
-        this.isEtudiant = false;
-      }
-      else if(token.type === "admin" || token.type === "superAdmin"){
-        this.isAdmin = true;
-        this.isEtudiant = false;
-      }
-      else {
-        this.isAdmin = false;
-        this.isEtudiant = true;
-      }
+
+      if(token == null) this.type = "signout";
+      else              this.type = token.type;
     });
 
     

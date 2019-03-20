@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import app.etutorat.models.Tuteur;
 import app.etutorat.models.queryobjects.PaireStringLong;
+import app.etutorat.models.queryobjects.ProjectionTuteur;
 
 @Repository
 public interface TuteurRepository extends JpaRepository<Tuteur, Long>, EtudiantRepository {
@@ -18,7 +19,7 @@ public interface TuteurRepository extends JpaRepository<Tuteur, Long>, EtudiantR
 	
 	
 	@Query("SELECT " +
-	           "    new app.etutorat.models.queryobjects.PaireStringLong(d.nom, COUNT(t)) " +
+	           "    new app.etutorat.models.queryobjects.PaireStringLong(d, COUNT(t)) " +
 	           "FROM " +
 	           "    Tutore t " +
 	           "JOIN " +
@@ -26,5 +27,8 @@ public interface TuteurRepository extends JpaRepository<Tuteur, Long>, EtudiantR
 	           "GROUP BY " +
 	           "    d.id")
 	public List<PaireStringLong> listDemandes();
+
+	
+	public List<ProjectionTuteur> findBy();
 	
 }

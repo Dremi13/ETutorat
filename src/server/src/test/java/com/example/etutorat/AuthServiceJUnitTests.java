@@ -22,7 +22,10 @@ import app.etutorat.dao.TuteurRepository;
 import app.etutorat.dao.TutoreRepository;
 import app.etutorat.models.Tuteur;
 import app.etutorat.models.Tutore;
-import app.etutorat.models.requestobjects.SigninForm;
+
+import static app.etutorat.utils.HashPswd.*;
+
+import app.etutorat.models.requestobjects.forms.SigninForm;
 import app.etutorat.models.requestobjects.UserToken;
 import app.etutorat.services.AuthentificationService;
 import app.exceptions.WrongLoginPasswordException;
@@ -86,14 +89,14 @@ public class AuthServiceJUnitTests {
 	
 	@Test
 	public void testCheckPswdRight() throws NoSuchProviderException, NoSuchAlgorithmException {
-		Assert.assertTrue(as.checkPassword("azer", this.tur));
-		Assert.assertTrue(as.checkPassword("azer", this.tor));
+		Assert.assertTrue(checkPassword("azer", this.tur));
+		Assert.assertTrue(checkPassword("azer", this.tor));
 	}
 	
 	@Test
 	public void testCheckPswdWrong() throws NoSuchProviderException, NoSuchAlgorithmException {
-		Assert.assertFalse(as.checkPassword("bzer", this.tur));
-		Assert.assertFalse(as.checkPassword("azebzer", this.tor));
+		Assert.assertFalse(checkPassword("bzer", this.tur));
+		Assert.assertFalse(checkPassword("azebzer", this.tor));
 	}
 	
 	@Test

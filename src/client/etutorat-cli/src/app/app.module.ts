@@ -15,7 +15,7 @@ import { IndexComponent } from './index/index.component';
 import { AdminIndexComponent } from './admin/admin-index/admin-index.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AdminModule } from './admin/admin.module';
-
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 
 
@@ -33,13 +33,15 @@ import { AdminModule } from './admin/admin.module';
     AdminIndexComponent
   ],
   imports: [
+    NgbModule,
     ReactiveFormsModule,
     AdminModule,
     FormsModule, 
     BrowserModule,
     HttpClientModule,
     AppRoutingModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    
     
   ],
   providers: [],

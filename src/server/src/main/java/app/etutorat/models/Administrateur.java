@@ -1,14 +1,20 @@
 package app.etutorat.models;
 
+import java.io.Serializable;
+
 import javax.persistence.Entity;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-
 @Entity
-public class Administrateur extends Utilisateur {
+public class Administrateur extends Utilisateur  implements Serializable {
 
 	
 	
+
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -314804994790507035L;
+
 	public Administrateur() {}
 	
 	public Administrateur(
@@ -20,5 +26,10 @@ public class Administrateur extends Utilisateur {
 	{
 		super(nom, prenom, email, password, salt);
 	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+	
 	
 }

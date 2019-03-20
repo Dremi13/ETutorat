@@ -1,0 +1,178 @@
+<div class="card">
+    <div class="card-body ">
+    
+      <div class="row justify-content-center">
+        <ul class="list-group col-4" id="myList" role="tablist">
+          
+            <a [attr.aria-expanded]="isCollapsed" aria-controls="collapse" aria-hidden="true"></a>
+            <li *ngFor="let tuteur of tuteurs; index as i">
+              <a (click)="onClick(i)" [ngClass]="{'border-success' : (currentTuteur != null) && (tuteur.id == currentTuteur.id) && currentTuteur.validationcompte, 'border-danger': (currentTuteur != null) && (tuteur.id == currentTuteur.id) && !currentTuteur.validationcompte}" class="list-group-item list-group-item-action border"  [attr.aria-expanded]="isCollapsed" aria-controls="collapse">
+                
+                <ng-template [ngIf]="tuteur.validationcompte">
+                  
+                  <div class="clearfix">
+                      {{tuteur.codeetu}} : {{tuteur.email}}
+                    <span  class="badge badge-success float-right">Validé</span>
+                  </div> 
+                </ng-template>
+                <ng-template [ngIf]="!tuteur.validationcompte">
+                  
+                    <div class="clearfix">
+                      {{tuteur.codeetu}} : {{tuteur.email}}
+                      <span class="badge badge-danger float-right">Non-validé</span>
+                    </div>
+                  
+                </ng-template>
+                
+              </a>
+            </li>
+          
+        </ul>
+  
+        <div id="collapse" class="col-5" [ngbCollapse]="isCollapsed" *ngIf="currentTuteur != null">
+          <div class="card">
+            <div class="card-body" >
+              <h5 class="card-title">Numéro de compte : {{currentTuteur.id}}
+                <button type="button" class="close" aria-label="Close" (click)="openRemoveTuteurModal(content)">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </h5>
+              <div id="information" class="pb-2 border-bottom">
+                Nom : {{currentTuteur.nom}} <br>
+                Prénom : {{currentTuteur.prenom}} <br>
+                Numéro d'étudiant : {{currentTuteur.codeetu}} <br>
+                Email : {{currentTuteur.email}} <br>
+                Filière : {{currentTuteur.filiere}} <br>
+                Telephone : {{currentTuteur.telephone}} <br>
+                
+                <div id="domaineDeCompetences">
+                  Domaine de compétences : 
+              
+                  <div ngbDropdown class="d-inline-block" autoClose="outside">
+                    
+                    <button class="btn btn-outline-secondary" id="dropdownBasic" ngbDropdownToggle></button>
+                    <div ngbDropdownMenu aria-labelledby="dropdownBasic">
+                      
+                      <div class="overflow-auto border-bottom" *ngFor="let matiere of currentTuteur.domaineDeCompetences; index as i" ngbDropdownItem style="display: inline-block; width: 10em; cursor: pointer;">
+                        {{matiere}}<button type="button" class="close" aria-label="Close" (click)="removeCompetenceTuteur(i)"><span aria-hidden="true">&times;</span></button>
+                        
+                      </div>
+                  
+                      <div>
+                        <div class="input-group">
+                          <input [(ngModel)]="inputNewMatiere" required type="text" class="form-control" placeholder="Ajouter une matière" aria-label="Ajouter une matière" aria-describedby="basic-addon2">
+                          <div class="input-group-append" (click)="addCompetenceTuteur()" style="cursor: pointer">
+                            <span class="input-group-text">+</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+              
+              <div id="btnUpdateModal" class="row justify-content-center mt-3 pb-3 border-bottom">
+                <button type="button" class="btn btn-secondary" (click)="openUpdateTuteurModal(updateModal)">Modifier</button>
+              </div>
+              
+              <div class="mt-3 pb-3 border-bottom">
+                <div *ngIf="currentTuteur.validationcompte">
+                  <div class="row justify-content-center"><p>Cet utilisateur est validé.</p></div>
+                  <div class="row justify-content-center"><button type="button" class="btn btn-danger" (click)="validerTuteur(false)">Voulez-vous le dévalider ?</button></div>
+                </div>
+                <div *ngIf="!currentTuteur.validationcompte">
+                  <div class="row justify-content-center"><p>Cet utilisateur n'est pas encore validé.</p></div>
+                  <div class="row justify-content-center"><button type="button" class="btn btn-success right" (click)="validerTuteur(true)">Voulez-vous le valider ?</button></div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <ngb-alert *ngIf="alertSuccessOpened" type="success" (close)="alertSuccessOpened = false">Le compte tuteur {{alertTuteur.email}} a bien été validé.</ngb-alert>
+  <ngb-alert *ngIf="alertDangerOpened" type="danger" (close)="alertDangerOpened = false">Le compte tuteur {{alertTuteur.email}} a bien été dévalidé.</ngb-alert>
+
+
+  <ng-template #content let-modal>
+   
+    <div class="modal-body">
+      <h3>Voulez-vous supprimer le compte :</h3><button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')"><span aria-hidden="true">&times;</span></button>
+      <p>{{currentTuteur.codeetu}} : {{currentTuteur.nom}} {{currentTuteur.prenom}} {{currentTuteur.email}}</p>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-outline-dark" (click)="modal.close('oui')">Oui</button>
+      <button type="button" class="btn btn-outline-dark" (click)="modal.dismiss('non')">Non</button>
+    </div>
+  </ng-template>
+  
+  
+  <ng-template #updateModal let-modal>
+ 
+    <div class="modal-body">
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+
+      <form [formGroup]="updateTuteurForm" (ngSubmit)="updateTuteur()" *ngIf="currentTuteur != null">
+  
+          <div class="row justify-content-center">
+            <div class="form-group col-md-3">
+              <label for="surnameInput">Nom :</label>  
+              <input id="surnameInput" class="form-control" type="text" formControlName="nom" required>
+            </div>
+          
+            <div class="form-group col-md-3">
+              <label for="firstnameInput">Prenom :</label>  
+              <input id="firstnameInput" class="form-control" type="text" formControlName="prenom" required>
+            </div>
+            
+            <div class="form-group col-md-3">
+              <label for="codeetuInput">Code étudiant :</label>  
+              <input id="codeetuInput" class="form-control" type="text" formControlName="codeetu" required>
+            </div>
+
+
+          </div>
+          
+          <div class="row justify-content-center">
+            <div class="form-group col-md-4">
+              <label for="telephoneInput">Telephone :</label>  
+              <input id="telephoneInput" class="form-control" type="text" formControlName="telephone" required>
+            </div>
+          
+          
+            <div class="form-group col-md-4">
+              <label for="filiereInput">Filière :</label>  
+              <input id="filiereInput" class="form-control" type="text" formControlName="filiere" required>
+            </div>
+          </div>
+          
+          <div class="row justify-content-center">
+            <div class="form-group col-md-4">
+              <label for="emailInput">Email :</label>  
+              <input id="emailInput" class="form-control" type="text" formControlName="email" required>
+            </div>
+          
+          
+            <div class="form-group col-md-4">
+              <label for="passwordInput">Mot de passe :</label>  
+              <input id="passwordInput" class="form-control" type="password" formControlName="password" required>
+            </div>
+          </div>
+
+            <div class="row justify-content-center">
+              <button type="submit" class="btn btn-outline-primary" [disabled]="!updateTuteurForm.valid">Modifier le compte</button>
+            </div>
+      </form>
+
+      <ngb-alert  *ngIf="wrongFormAlertOpened" type="danger" (close)="wrongFormAlertOpened = false">
+          <div *ngFor="let champ of alreadyUse; index as i">{{champ}} associé à un autre compte !</div>
+      </ngb-alert>
+
+    </div>
+  </ng-template>

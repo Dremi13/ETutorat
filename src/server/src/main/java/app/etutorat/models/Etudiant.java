@@ -10,6 +10,7 @@ public abstract class Etudiant extends Utilisateur {
 
 	
 
+
 	
 	@Column(unique = true)
 	private String codeetu;
@@ -54,6 +55,8 @@ public abstract class Etudiant extends Utilisateur {
 	public void setFiliere(String filiere) {
 		this.filiere = filiere;
 	}
+
+
 	
 	
 	
