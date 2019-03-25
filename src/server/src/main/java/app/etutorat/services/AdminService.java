@@ -2,6 +2,7 @@ package app.etutorat.services;
 
 import java.security.GeneralSecurityException;
 import java.util.ArrayList;
+import java.util.Set;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -12,14 +13,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import app.etutorat.dao.AdminRepository;
+import app.etutorat.dao.SalleRepository;
 import app.etutorat.dao.SeanceRepository;
 import app.etutorat.dao.TuteurRepository;
 import app.etutorat.dao.TutoreRepository;
 import app.etutorat.models.Administrateur;
+import app.etutorat.models.Salle;
 import app.etutorat.models.Seance;
 import app.etutorat.models.Tuteur;
 import app.etutorat.models.Tutore;
 import app.etutorat.models.queryobjects.ProjectionAdmin;
+import app.etutorat.models.queryobjects.ProjectionSeance;
 import app.etutorat.models.queryobjects.ProjectionTuteur;
 import app.etutorat.models.queryobjects.ProjectionTutore;
 import app.etutorat.models.requestobjects.MatiereToken;
@@ -28,6 +32,7 @@ import app.etutorat.models.requestobjects.forms.CreateAdminForm;
 import app.etutorat.models.requestobjects.forms.EtudiantForm;
 import app.etutorat.models.requestobjects.forms.UpdateForm;
 import app.exceptions.DuplicateUniqueKeyException;
+import app.exceptions.FullCourseException;
 import app.exceptions.NoElementException;
 
 import static app.etutorat.utils.HashPswd.*;
@@ -50,6 +55,9 @@ public class AdminService {
 	
 	@Autowired
 	private SeanceRepository ser;
+	
+	@Autowired
+	private SalleRepository salr;
 	
 	
 	public List<ProjectionAdmin> createAdmin(CreateAdminForm form) throws GeneralSecurityException, DuplicateUniqueKeyException {
@@ -421,8 +429,32 @@ public class AdminService {
 	
 	
 	
-	public List<Seance> getSeances(){
-		return ser.findAll();
+	public List<ProjectionSeance> getSeances(){
+		return ser.findBy();
+	}
+	
+	public void joinSeance(Long idTutore, Long idSeance) throws NoElementException, FullCourseException {
+		
+		Optional<Tutore> ot = tor.findById(idTutore);
+		if(!ot.isPresent()) throw new NoElementException(idTutore);
+		Tutore t = ot.get();
+		
+		Optional<Seance> os = ser.findById(idSeance);
+		if(!os.isPresent()) throw new NoElementException(idSeance);
+		Seance s = os.get();
+		
+		Set<Tutore> inscrits = s.getTutores();
+		if(inscrits.size() >= s.getNbmaxtutores()) throw new FullCourseException(idSeance);
+		
+		inscrits.add(t);
+		s.setTutores(inscrits);
+		ser.save(s);
+			
+		
+	}
+	
+	public List<Salle> getSalles(){
+		return salr.findAll();
 	}
 	
 }

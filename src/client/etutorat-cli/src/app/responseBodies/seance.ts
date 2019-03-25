@@ -1,5 +1,6 @@
 import { Tuteur } from './tuteur';
 import { Salle } from './Salle';
+import { Tutore } from './tutore';
 
 export class Seance {
     id: number;
@@ -10,7 +11,7 @@ export class Seance {
     nbmaxtutores: number;
     tuteur: Tuteur;
     salle: Salle;
-
+    tutores: Tutore[];
   
     
 }

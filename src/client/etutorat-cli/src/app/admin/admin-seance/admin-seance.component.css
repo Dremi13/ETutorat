@@ -5,3 +5,17 @@
     max-width: 10%;
     width: 10%;
 }
+
+.timepicker {
+    margin-left: 5%;
+    margin-right: 5%;
+
+}
+
+.datepicker {
+    margin-top: 15.8%;
+}
+
+label {
+    margin-bottom: 0;
+}

@@ -1,6 +1,183 @@
+<div class="d-flex flex-column align-items-center">
+<div>
+  {{viewDate | calendarDate:(view + 'ViewTitle'):locale }}
+</div>
+<div>
+  <button mwlCalendarPreviousView class="btn btn-secondary" [(viewDate)]="viewDate" [view]="view" [disabled]="viewDate < minDate">&lt;</button> 
+  <button mwlCalendarToday class="btn btn-secondary" [(viewDate)]="viewDate"> Semaine actuelle : ({{currentWeekStart.toLocaleDateString('fr-FR')}} - {{currentWeekEnd.toLocaleDateString('fr-FR')}}) </button>
+  <button mwlCalendarNextView class="btn btn-secondary" [(viewDate)]="viewDate" [view]="view" [disabled]="viewDate > maxDate">&gt;</button>
+</div>
+</div>
+
+
 <mwl-calendar-week-view
    [viewDate]="viewDate"
    [events]="events"
-   [excludeDays]="[0]">
+   [excludeDays]="[0]"
+   [dayStartHour]="8"
+   [dayEndHour]="20"
+   [weekStartsOn]="1"
+   [hourSegmentHeight]="60"
+   (eventClicked)="clickEvent($event.event)"
+   [eventTitleTemplate]="customEventTitleTemplate"
+   [locale]="locale">
 
  </mwl-calendar-week-view>
+
+
+ <ng-template #modalEvent let-close="close">
+  <div class="modal-header">
+    <h5 class="modal-title">Event action occurred</h5>
+    <button type="button" class="close" (click)="close()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div>
+      Event:
+      <pre>{{ eventClicked | json }}</pre>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-secondary" (click)="close()">
+      OK
+    </button>
+  </div>
+</ng-template>
+
+
+
+
+
+
+<ng-template
+      #customEventTitleTemplate
+      let-event="event"
+      let-view="view">
+      <p
+        class="cal-event-title text-center">
+        {{event.title}} <br>
+        <ng-template [ngIf]="event.meta.outilAV == ''">
+          {{event.meta.salle.nom}} - {{event.meta.salle.site}} <br>
+        </ng-template>
+        <ng-template [ngIf]="event.meta.outilAV != ''">
+          {{event.meta.outilAV}}
+        </ng-template>
+        {{event.meta.tuteur.nom.toUpperCase()}} - {{event.meta.tuteur.prenom}}
+      </p>
+      
+</ng-template>
+
+
+<ng-template #updateEventModal let-modal>
+ 
+  <div class="modal-body">
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+
+    <form [formGroup]="updateEventForm" (ngSubmit)="updateEvent()" *ngIf="eventClicked != null">
+
+   
+        <div class="row">
+          <div class="form-group col-md-4">
+            <label for="titleInput">Titre :</label>  
+            <input id="titleInput" class="form-control" type="text" formControlName="title" required>
+          </div>
+
+
+          <div class="form-group col-md-4">
+            
+            <label for="tuteurInput">Tuteur :</label>
+            <div class="input-group">
+              <button type="button" class="btn btn-outline-secondary" disabled>{{tuteur.codeetu}}</button>
+              <div ngbDropdown  class="btn-group" role="group">
+                  <button type="button" class="btn btn-outline-secondary  dropdown-toggle-split" id="dropdownTuteur" ngbDropdownToggle></button>
+                  <div ngbDropdownMenu aria-labelledby="dropdownTuteur" clas="dropdown-menu">
+                    <ng-template ngFor let-tut [ngForOf]="allTuteurs" let-i="index">
+                      <span ngbDropdownItem *ngIf="tut.codeetu !== tuteur.codeetu" class="overflow-auto border-bottom"  (click)="chooseTuteur(tut)" style="display: inline-block; width: 10em; cursor: pointer;">{{tut.codeetu}} {{tut.email}}</span>
+                    </ng-template>                 
+                  </div>
+
+                </div>
+            </div>
+          </div>
+          
+          <div class="form-group col-md-4">
+            
+            <label for="tuteurInput">Salle :</label>
+            <div class="input-group">
+              <button type="button" class="btn btn-outline-secondary" disabled>{{salle.nom}}</button>
+              <div ngbDropdown  class="btn-group" role="group">
+                  <button type="button" class="btn btn-outline-secondary  dropdown-toggle-split" id="dropdownSalle" ngbDropdownToggle></button>
+                  <div ngbDropdownMenu aria-labelledby="dropdownSalle" clas="dropdown-menu">
+                    <ng-template ngFor let-s [ngForOf]="allSalles" let-i="index">
+                      <span ngbDropdownItem *ngIf="s.id !== salle.id" class="overflow-auto border-bottom"  (click)="chooseSalle(s)" style="display: inline-block; width: 10em; cursor: pointer;">{{s.nom}}</span>
+                    </ng-template>                 
+                  </div>
+
+                </div>
+            </div>
+          </div>
+
+
+        </div>
+        <div class="row">
+          <div class="form-group col-md-4">
+            <label for="startDateInput">Jour :</label>
+
+            <div class="input-group datepicker">
+              <input class="form-control" id="startDateInput" formControlName="date" ngbDatepicker #d="ngbDatepicker">
+              <div class="input-group-append">
+                  <button class="btn btn-outline-secondary calendar" (click)="d.toggle()" type="button"><i class="far fa-calendar-alt"></i></button>
+              </div>
+            </div>
+          </div>
+          
+        
+
+          <div class="form-group col-md-8">
+            <label>Horaires :</label>
+            <div class="input-group">
+                <ngb-timepicker class="timepicker" formControlName="startTime"></ngb-timepicker>
+                <ngb-timepicker class="timepicker" formControlName="endTime"></ngb-timepicker>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="row justify-content-center">
+          <div class="col-md-4">
+              <button type="button" class="btn btn-outline-secondary">Inscrits</button>
+              <div ngbDropdown class="btn-group" placement="bottom" role="group">
+                <button type="button" class="btn btn-outline-secondary  dropdown-toggle-split" id="dropdownTutores" ngbDropdownToggle></button>
+                <div ngbDropdownMenu aria-labelledby="dropdownTutores" clas="dropdown-menu">
+                  <div *ngIf="eventClicked.meta.tutores.length != 0">
+                    <div *ngFor="let inscrit of eventClicked.meta.tutores; index as i" class="btn-group">
+                      <span ngbDropdownItem class="overflow-auto border-bottom"  style="display: inline-block; width: 20em;">{{inscrit.codeetu}} {{inscrit.email}}</span>
+                      <button type="button" class="close" aria-label="Close" (click)="removeTutore(i)"><span aria-hidden="true">&times;</span></button>
+                    </div>
+                  </div>              
+                  <div *ngIf="eventClicked.meta.tutores.length == 0">
+                      Aucun inscrit.
+                  </div>
+                </div>
+              </div>
+          </div>
+          <div class="col-md-4">
+            
+          </div>
+
+
+        </div>
+
+
+        <div class="row justify-content-center border-top">
+            <button type="submit" class="btn btn-outline-primary" [disabled]="!updateEventForm.valid">Modifier le compte</button>
+        </div>
+    </form>
+
+   
+
+  </div>
+</ng-template>

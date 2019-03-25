@@ -1,9 +1,15 @@
-import { NgModule } from '@angular/core';
+import { NgModule, LOCALE_ID } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule } from '@angular/forms';
 import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
+
+import { registerLocaleData } from '@angular/common';
+import localeFr from '@angular/common/locales/fr';
+import localeFrExtra from '@angular/common/locales/extra/fr';
+
+
 
 import { AdminRoutingModule } from './admin-routing.module';
 
@@ -23,6 +29,7 @@ import { CreateTutoreComponent } from './user-manager/create-user/create-tutore/
 import { AdminSeanceComponent } from './admin-seance/admin-seance.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
+registerLocaleData(localeFr, 'fr', localeFrExtra);
 
 @NgModule({
   declarations: [AdminSigninComponent, CreateAdminComponent, AdminListComponent, AdminManagerComponent, UserManagerComponent, CreateUserComponent, UserListComponent, TuteurListComponent, TutoreListComponent, CreateTuteurComponent, CreateTutoreComponent, AdminSeanceComponent],
@@ -37,6 +44,10 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     CommonModule,
     FormsModule,
     AdminRoutingModule
+  ],
+  providers: [
+    { provide: LOCALE_ID, useValue: "fr" }
   ]
+ 
 })
 export class AdminModule { }

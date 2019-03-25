@@ -19,8 +19,9 @@ import org.springframework.web.server.ResponseStatusException;
 import app.etutorat.models.requestobjects.forms.CreateAdminForm;
 import app.etutorat.models.requestobjects.forms.EtudiantForm;
 import app.etutorat.models.requestobjects.forms.UpdateForm;
-import app.etutorat.models.Seance;
+import app.etutorat.models.Salle;
 import app.etutorat.models.queryobjects.ProjectionAdmin;
+import app.etutorat.models.queryobjects.ProjectionSeance;
 import app.etutorat.models.queryobjects.ProjectionTuteur;
 import app.etutorat.models.queryobjects.ProjectionTutore;
 import app.etutorat.models.requestobjects.MatiereToken;
@@ -447,13 +448,20 @@ public class AdminController {
 	}
 	
 	
+	
+	
+	
+	
+	
+	
+	
 	@GetMapping("/getSeances")
-	public ResponseEntity<List<Seance>> getSeances()  {
+	public ResponseEntity<List<ProjectionSeance>> getSeances()  {
 		
 		
 			//Vérification des droits
 			if( ((UserToken)session.getAttribute("token")).getType().equals("superAdmin")  || ((UserToken)session.getAttribute("token")).getType().equals("admin")   ) {
-				List<Seance> la = adms.getSeances();
+				List<ProjectionSeance> la = adms.getSeances();
 				return ResponseEntity.ok(la);
 			}
 					
@@ -462,6 +470,24 @@ public class AdminController {
 			}
 		
 	}
+	
+	@GetMapping("/getSalles")
+	public ResponseEntity<List<Salle>> getSalles()  {
+		
+		
+		//Vérification des droits
+		if( ((UserToken)session.getAttribute("token")).getType().equals("superAdmin")  || ((UserToken)session.getAttribute("token")).getType().equals("admin")   ) {
+			List<Salle> la = adms.getSalles();
+			return ResponseEntity.ok(la);
+		}
+				
+		else {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not authorized !");		
+		}
+	
+	}
+	
+	
 	
 	
 	
