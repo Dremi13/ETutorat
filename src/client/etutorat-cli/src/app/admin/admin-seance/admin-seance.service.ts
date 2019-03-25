@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { Seance } from '../../responseBodies/seance';
 import { CalendarEvent, EventColor } from 'calendar-utils';
+import { Salle } from '../../responseBodies/Salle';
 
 @Injectable({
   providedIn: 'root'
@@ -17,6 +18,10 @@ export class AdminSeanceService {
     return this.http.get<Seance[]>(environment.API_URL+"/"+environment.API_ADMIN+"/getSeances",{withCredentials: true});
   }
 
+  getSalles(){
+    return this.http.get<Salle[]>(environment.API_URL+"/"+environment.API_ADMIN+"/getSalles",{withCredentials: true});
+  }
+
 
   convertSeanceToEvent(seance: Seance): CalendarEvent {
     return {
@@ -29,7 +34,14 @@ export class AdminSeanceService {
         beforeStart: false,
         afterEnd: false,
       },
-      draggable: false
+      draggable: false,
+      meta: {
+        tuteur: seance.tuteur,
+        outilAV: seance.outilAV,
+        salle: seance.salle,
+        nbmax: seance.nbmaxtutores,
+        tutores: seance.tutores
+      }
     }
   }
 }

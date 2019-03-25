@@ -58,5 +58,23 @@ public class Tutore extends Etudiant implements Serializable {
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;
+	}
+
+	@Override
+	public int hashCode() {
+		return Long.hashCode(this.getId());
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null) return false;
+	    if (!(obj instanceof Tutore))
+	        return false;
+	    Tutore t = (Tutore) obj;
+	    
+		return this.getId() == t.getId();
 	} 
+	
+	
+	
 }

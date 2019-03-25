@@ -9,11 +9,12 @@ import org.springframework.stereotype.Repository;
 import app.etutorat.models.Salle;
 import app.etutorat.models.Seance;
 import app.etutorat.models.Tuteur;
+import app.etutorat.models.queryobjects.ProjectionSeance;
 
 @Repository
 public interface SeanceRepository extends JpaRepository<Seance, Long> {
 
-	
+	public List<ProjectionSeance> findBy();
 	
 	public List<Seance> findByOutilAV(String outilav);
 	public List<Seance> findBySalle(Salle salle);
