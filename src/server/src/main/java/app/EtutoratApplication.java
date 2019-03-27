@@ -131,6 +131,107 @@ public class EtutoratApplication implements ApplicationRunner {
 				s1);
 		ser.save(s);
 		
+		s = new Seance(
+				OffsetDateTime.of(2019,03,27,16,0,0,0,ZoneOffset.UTC),
+				OffsetDateTime.of(2019,03,27,18,0,0,0,ZoneOffset.UTC),
+				"",
+				"Java",
+				4,
+				tu,
+				s1);
+		ser.save(s);
+		
+		s = new Seance(
+				OffsetDateTime.of(2019,03,29,16,0,0,0,ZoneOffset.UTC),
+				OffsetDateTime.of(2019,03,29,18,0,0,0,ZoneOffset.UTC),
+				"",
+				"Java",
+				4,
+				tu,
+				s1);
+		ser.save(s);
+		
+		s = new Seance(
+				OffsetDateTime.of(2019,03,30,16,0,0,0,ZoneOffset.UTC),
+				OffsetDateTime.of(2019,03,30,18,0,0,0,ZoneOffset.UTC),
+				"",
+				"Java",
+				4,
+				tu,
+				s1);
+		ser.save(s);
+		
+		s = new Seance(
+				OffsetDateTime.of(2019,03,25,16,0,0,0,ZoneOffset.UTC),
+				OffsetDateTime.of(2019,03,25,18,0,0,0,ZoneOffset.UTC),
+				"",
+				"Java",
+				4,
+				tu,
+				s1);
+		ser.save(s);
+		
+		s = new Seance(
+				OffsetDateTime.of(2019,03,26,16,0,0,0,ZoneOffset.UTC),
+				OffsetDateTime.of(2019,03,26,18,0,0,0,ZoneOffset.UTC),
+				"",
+				"Java",
+				4,
+				tu,
+				s1);
+		ser.save(s);
+		
+		s = new Seance(
+				OffsetDateTime.of(2019,03,25,14,0,0,0,ZoneOffset.UTC),
+				OffsetDateTime.of(2019,03,25,16,0,0,0,ZoneOffset.UTC),
+				"",
+				"Java",
+				4,
+				tu,
+				s1);
+		ser.save(s);
+		
+		s = new Seance(
+				OffsetDateTime.of(2019,03,26,14,0,0,0,ZoneOffset.UTC),
+				OffsetDateTime.of(2019,03,26,16,0,0,0,ZoneOffset.UTC),
+				"",
+				"Java",
+				4,
+				tu,
+				s1);
+		ser.save(s);
+		
+		s = new Seance(
+				OffsetDateTime.of(2019,03,29,14,0,0,0,ZoneOffset.UTC),
+				OffsetDateTime.of(2019,03,29,16,0,0,0,ZoneOffset.UTC),
+				"",
+				"Java",
+				4,
+				tu,
+				s1);
+		ser.save(s);
+		
+		
+		s = new Seance(
+				OffsetDateTime.of(2019,03,30,13,30,0,0,ZoneOffset.UTC),
+				OffsetDateTime.of(2019,03,30,15,30,0,0,ZoneOffset.UTC),
+				"",
+				"Java",
+				4,
+				tu,
+				s1);
+		ser.save(s);
+		
+		s = new Seance(
+				OffsetDateTime.of(2019,03,30,7,30,0,0,ZoneOffset.UTC),
+				OffsetDateTime.of(2019,03,30,9,30,0,0,ZoneOffset.UTC),
+				"",
+				"Java",
+				4,
+				tu,
+				s1);
+		ser.save(s);
+		
 		
 	}
 	

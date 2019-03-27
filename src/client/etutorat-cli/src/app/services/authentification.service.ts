@@ -34,8 +34,12 @@ export class AuthentificationService {
   }
 
 
-  register(registerForm){
+  registerTuteur(registerForm){
     return this.http.post<Token>(environment.API_URL+"/auth/register/tuteur", registerForm, {withCredentials: true})
+  }
+
+  registerTutore(registerForm){
+    return this.http.post<Token>(environment.API_URL+"/auth/register/tutore", registerForm, {withCredentials: true})
   }
 
   
@@ -45,7 +49,15 @@ export class AuthentificationService {
   }
   
   addToken(token: Token){
-    console.log("TOKEN ENVOYE")
+    if(token != null){
+      localStorage.setItem("type",token.type);
+      localStorage.setItem("login",token.login);
+    }
+    else {
+      localStorage.removeItem("type");
+      localStorage.removeItem("login");
+    }
+    
     this.token.next(token);
   }
 

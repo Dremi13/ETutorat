@@ -105,11 +105,28 @@ public class AuthentificationController {
 	}
 	  
 	@PostMapping("/register/tuteur")
-	public ResponseEntity<UserToken> register(@RequestBody EtudiantForm form) {
+	public ResponseEntity<UserToken> registerTuteur(@RequestBody EtudiantForm form) {
 		  
 		System.out.println("Sign up");
 		try {
-			UserToken token = as.register(form);
+			UserToken token = as.registerTuteur(form);
+			return ResponseEntity.ok(token);
+			  
+		}
+		catch (BadRegisterFormException ex) {
+			System.out.println("Sign in failed");
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Wrong login/password", ex);
+		}
+		  
+		  
+	}
+	
+	@PostMapping("/register/tutore")
+	public ResponseEntity<UserToken> registerTutore(@RequestBody EtudiantForm form) {
+		  
+		System.out.println("Sign up");
+		try {
+			UserToken token = as.registerTutore(form);
 			return ResponseEntity.ok(token);
 			  
 		}

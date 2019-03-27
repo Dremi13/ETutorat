@@ -8,6 +8,7 @@ import { IndexComponent } from './index/index.component';
 
 import { SigninGuard } from './services/guard/signin.guard';
 import { NotSigninGuard } from './services/guard/not-signin.guard';
+import { SeanceComponent } from './seance/seance.component';
 
 
 const appRoutes: Routes = [
@@ -31,6 +32,10 @@ const appRoutes: Routes = [
     { path: 'register',
       component: RegisterComponent,
       canActivate: [NotSigninGuard]
+    },
+    { path: 'seance',
+      component: SeanceComponent,
+      canActivate: [SigninGuard]
     },
     
 

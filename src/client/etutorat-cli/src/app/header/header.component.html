@@ -5,7 +5,7 @@
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
-  <a routerLink="/" class="navbar-brand"><sup>E</sup>tutorat</a>
+  <a class="navbar-brand"><sup>E</sup>tutorat</a>
   <div class="collapse navbar-collapse" id="navbarNav" [ngSwitch]="type">
     
       <ul class="navbar-nav" *ngSwitchCase="'superAdmin'">
@@ -28,6 +28,7 @@
           
       <ul class="navbar-nav" *ngSwitchDefault>
         <li class="nav-item"><a class="nav-link" routerLink="/">Index</a></li>
+        <li class="nav-item"><a class="nav-link" routerLink="/seance">Planning</a></li>
         <li class="nav-item"><a class="nav-link" (click)="signout()">Sign Out</a></li>
       </ul>
     

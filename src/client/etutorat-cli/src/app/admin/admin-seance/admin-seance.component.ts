@@ -149,6 +149,7 @@ export class AdminSeanceComponent implements OnInit {
   
   alertDangerOpened = false;
   timeOut;
+  errorMessage: String;
 
 
   constructor(private adminSeanceService: AdminSeanceService,
@@ -255,7 +256,7 @@ export class AdminSeanceComponent implements OnInit {
   clickEvent(event){
     this.eventClicked = event;
    
-    this.modalService.open(this.modalEvent).result.then(
+    this.modalService.open(this.modalEvent,{size: "sm", centered: true }).result.then(
       (result) => {
         this.eventClicked = null;
       },
@@ -311,17 +312,7 @@ export class AdminSeanceComponent implements OnInit {
       return;
     }
 
-    this.events = this.events.map(iEvent => {
-      if (iEvent === this.eventClicked) {
-        return newEvent;
-      }
-      return iEvent;
-    });
-
-    this.eventBySalle[this.eventClicked.meta.salle.id-1] = this.eventBySalle[this.eventClicked.meta.salle.id-1].filter(iEvent => iEvent !== this.eventClicked);
-    if(newEvent.meta.outilAV == "") this.eventBySalle[newEvent.meta.salle.id-1].push(newEvent);
     
-    this.eventClicked = newEvent;
 
     this.adminSeanceService.updateSeance(newEvent.meta.id,{
       sujet: newEvent.title,
@@ -331,9 +322,32 @@ export class AdminSeanceComponent implements OnInit {
       tuteur: newEvent.meta.tuteur,
       salle: newEvent.meta.salle,
       nbmaxtutores: newEvent.meta.nbmaxtutores
-    }).subscribe();
+    }).subscribe(
+      resp => {
+        this.events = this.events.map(iEvent => {
+          if (iEvent === this.eventClicked) {
+            return newEvent;
+          }
+          return iEvent;
+        });
 
-    this.modalService.dismissAll();
+        this.eventBySalle[this.eventClicked.meta.salle.id-1] = this.eventBySalle[this.eventClicked.meta.salle.id-1].filter(iEvent => iEvent !== this.eventClicked);
+        if(newEvent.meta.outilAV == "") this.eventBySalle[newEvent.meta.salle.id-1].push(newEvent);
+        
+        this.eventClicked = newEvent;
+        this.modalService.dismissAll();
+      },
+      error => {
+        console.log(error);
+        if(error.status == 403){
+          this.updateEventForm.setErrors({'tooManyHours': true});
+          this.errorMessage = error.error.message;
+          this.alertDangerOpened = true;
+          this.timeOut = setTimeout(() => {this.alertDangerOpened = false; this.updateEventForm.setErrors({'tooManyHours': null})}, 10000);
+        }
+    });
+
+    
     
   }
 
@@ -380,10 +394,13 @@ export class AdminSeanceComponent implements OnInit {
       if(newEvent.meta.outilAV === "") this.eventBySalle[newEvent.meta.salle.id-1].push(newEvent);
     },
     error => {
-      if(error.status == 404){
-      alert(error.message);
-    }
-  });
+      if(error.status == 403){
+        this.createEventForm.setErrors({'tooManyHours': true});
+        this.errorMessage = error.error.message;
+        this.alertDangerOpened = true;
+        this.timeOut = setTimeout(() => {this.alertDangerOpened = false; this.createEventForm.setErrors({'tooManyHours': null})}, 10000);
+      }
+    });
   }
 
 

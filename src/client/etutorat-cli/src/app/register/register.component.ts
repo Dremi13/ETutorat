@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 
 import { AuthentificationService } from '../services/authentification.service';
 import { Token } from '../responseBodies/token';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 
 
 @Component({
@@ -11,34 +12,14 @@ import { Token } from '../responseBodies/token';
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css']
 })
-export class RegisterComponent implements OnInit {
+export class RegisterComponent {
 
   constructor(private as : AuthentificationService,
-              private router: Router) { }
-
-  ngOnInit() {
-
-    var registerForm = {
-      nom : "Test",
-      prenom: "test",
-      email: "test@test.com",
-      password: "azer",
-      codeetu: "a12345678",
-      telephone: "0123456789",
-      filiere: "Master 2 Informatique"
-    }
-    this.as.register(registerForm).subscribe(
-      (resp: Token) => {
-        this.as.addToken(resp);
-        this.router.navigate(['/']);
-      },
-      error => {
-        if(error.status == 404){
-          
-          alert(error.message);
-          
-        }
-      });;;
+              private router: Router)
+  { 
+              
   }
 
+
+  
 }

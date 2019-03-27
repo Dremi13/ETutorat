@@ -1,14 +1,18 @@
 <div class="card">
   <div class="card-body">
   
-    <div class="row">
+    <div class="row justify-content-center">
       <ul class="list-group col-3" id="myList" role="tablist">
         
           <a [attr.aria-expanded]="isCollapsed" aria-controls="collapse" aria-hidden="true"></a>
-          <li *ngFor="let admin of admins; index as i">
-            <a (click)="onClick(i)" [ngClass]="{'active' : (currentAdmin != null) && (admin.id == currentAdmin.id)}" class="list-group-item list-group-item-action"  [attr.aria-expanded]="isCollapsed" aria-controls="collapse">{{admin.nom}}</a>
-          </li>
-        
+          <div *ngIf="admins.length != 0">
+            <li *ngFor="let admin of admins; index as i">
+              <a (click)="onClick(i)" [ngClass]="{'active' : (currentAdmin != null) && (admin.id == currentAdmin.id)}" class="list-group-item list-group-item-action"  [attr.aria-expanded]="isCollapsed" aria-controls="collapse">{{admin.nom}}</a>
+            </li>
+          </div>
+          <div *ngIf="admins.length == 0">
+            <p>Aucun administrateur.</p>
+          </div>
       </ul>
 
       <div id="collapse" [ngbCollapse]="isCollapsed" *ngIf="currentAdmin != null">

@@ -449,7 +449,7 @@ public class AdminService {
 		checkCollision(s,true);
 		
 		//Verify the number of hours of the new Tuteur
-		checkTuteurHours(s.getTuteur(),s.getDateDebut().until(s.getDateFin(), ChronoUnit.MINUTES));
+		checkTuteurHours(s.getTuteur(),s.getDateDebut().until(s.getDateFin(), ChronoUnit.MINUTES),null);
 		
 		
 		return ser.save(s);
@@ -489,9 +489,8 @@ public class AdminService {
 		checkCollision(s, false);
 		
 		//Verify the number of hours of the new Tuteur
-		if(s.getTuteur().getId() != sf.getTuteur().getId()) {
-			checkTuteurHours(sf.getTuteur(),sf.getDateDebut().until(sf.getDateFin(), ChronoUnit.MINUTES));
-		}
+		if(s.getTuteur().getId() != sf.getTuteur().getId()) checkTuteurHours(sf.getTuteur(),sf.getDateDebut().until(sf.getDateFin(), ChronoUnit.MINUTES),null);
+		else 												checkTuteurHours(sf.getTuteur(),sf.getDateDebut().until(sf.getDateFin(), ChronoUnit.MINUTES),s);
 		
 		s.setDateDebut(sf.getDateDebut());
 		s.setDateFin(sf.getDateFin());
@@ -521,16 +520,27 @@ public class AdminService {
 	
 	
 	//Throw TooManyHoursException if the tuteur will exceed his time limitation (23h for now).
-	public void checkTuteurHours(Tuteur tuteur, long nextSeanceDuration) throws TooManyHoursException {
+	//previousSeance is used for update with tuteur change. null otherwise.
+	public void checkTuteurHours(Tuteur tuteur, long nextSeanceDuration, Seance previousSeance) throws TooManyHoursException {
 		List<Seance> seances = ser.findByTuteur(tuteur);
 		long time = 0;
 		
-		for(Seance s : seances) {
-			time += s.getDateDebut().until(s.getDateFin(), ChronoUnit.MINUTES);
+		//Update without tuteur change : don't count the previous seance.
+		if(previousSeance != null) {
+			for(Seance s : seances) {
+				if(s.getId() != previousSeance.getId()) time += s.getDateDebut().until(s.getDateFin(), ChronoUnit.MINUTES);
+			}
+		}
+		
+		//Create/Update with tuteur change : no need to omit a previous seance.
+		else {
+			for(Seance s : seances) {
+				time += s.getDateDebut().until(s.getDateFin(), ChronoUnit.MINUTES);
+			}
 		}
 		
 		//23 h =  1380 minutes
-		if(time + nextSeanceDuration > 1380) throw new TooManyHoursException(tuteur.getId(),time);
+		if(time + nextSeanceDuration > 1380) throw new TooManyHoursException(tuteur,time);
 	}
 	
 	
