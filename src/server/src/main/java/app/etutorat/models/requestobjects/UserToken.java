@@ -10,6 +10,7 @@ public class UserToken implements Serializable {
 	 */
 	private static final long serialVersionUID = 9169252046663449859L;
 	
+	private long id;
 	private String login;
 	private String type;
 	
@@ -48,7 +49,15 @@ public class UserToken implements Serializable {
 	@Override
 	public boolean equals(Object obj) {
 		UserToken token = (UserToken) obj;
-		return (this.login == token.login && this.type == token.type);
+		return (this.id == token.id && this.type == token.type);
+	}
+
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
 	}
 
 

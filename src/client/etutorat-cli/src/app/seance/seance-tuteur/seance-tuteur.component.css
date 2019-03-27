@@ -1,0 +1,44 @@
+.col-2 {
+    max-width: 15%;
+}
+.col-hour {
+    max-width: 10%;
+    width: 10%;
+}
+
+.timepicker {
+    margin-left: 5%;
+    margin-right: 5%;
+
+}
+
+.datepicker {
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+label {
+    margin-bottom: 0;
+}
+
+
+.custom-checkbox {
+    display: inline-block
+}
+
+#weekCalendar {
+    width: 90%;
+    margin: auto;
+    margin-top: 2%;
+}
+
+#addSeance {
+    width: 80%;
+    margin: auto;
+    margin-top: 5%;
+    margin-bottom: 2%;
+}
+
+#horairePicker {
+    margin: auto;
+}
