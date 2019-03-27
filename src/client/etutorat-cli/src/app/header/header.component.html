@@ -18,6 +18,7 @@
       <ul class="navbar-nav" *ngSwitchCase="'admin'">
         <li class="nav-item"><a class="nav-link" routerLink="/">Index</a></li>
         <li class="nav-item"><a class="nav-link" routerLink="/{{API_admin}}/users">UserManager</a></li>
+        <li class="nav-item"><a class="nav-link" routerLink="/{{API_admin}}/seance">SeanceManager</a></li>
         <li class="nav-item"><a class="nav-link" (click)="signout()">Sign Out</a></li>
       </ul>
       <ul class="navbar-nav" *ngSwitchCase="'signout'">

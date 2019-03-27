@@ -2,8 +2,7 @@ package app.etutorat.models;
 
 import java.io.Serializable;
 import java.time.OffsetDateTime;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -42,7 +41,7 @@ public class Seance implements Serializable {
 	@JoinTable(	name = "inscription",
 				joinColumns = @JoinColumn(name="SEANCE_ID", referencedColumnName="id"),
 				inverseJoinColumns =  @JoinColumn(name="TUT_ID", referencedColumnName="id") )
-	private Set<Tutore> tutores;
+	private List<Tutore> tutores;
 	
 	
 	
@@ -67,7 +66,7 @@ public class Seance implements Serializable {
 		this.nbmaxtutores = nbmaxtutores;
 		this.tuteur = tuteur;
 		this.salle = salle;
-		this.tutores = new HashSet<Tutore>();
+		this.tutores = null;
 		
 	}
 	
@@ -117,11 +116,10 @@ public class Seance implements Serializable {
 	public void setNbmaxtutores(int nbmaxtutores) {
 		this.nbmaxtutores = nbmaxtutores;
 	}
-	
-	public Set<Tutore> getTutores() {
+	public List<Tutore> getTutores() {
 		return tutores;
 	}
-	public void setTutores(Set<Tutore> tutores) {
+	public void setTutores(List<Tutore> tutores) {
 		this.tutores = tutores;
 	}
 	

@@ -19,3 +19,8 @@
 label {
     margin-bottom: 0;
 }
+
+
+.custom-checkbox {
+    display: inline-block
+}

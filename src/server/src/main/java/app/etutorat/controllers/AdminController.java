@@ -18,8 +18,10 @@ import org.springframework.web.server.ResponseStatusException;
 
 import app.etutorat.models.requestobjects.forms.CreateAdminForm;
 import app.etutorat.models.requestobjects.forms.EtudiantForm;
+import app.etutorat.models.requestobjects.forms.SeanceForm;
 import app.etutorat.models.requestobjects.forms.UpdateForm;
 import app.etutorat.models.Salle;
+import app.etutorat.models.Seance;
 import app.etutorat.models.queryobjects.ProjectionAdmin;
 import app.etutorat.models.queryobjects.ProjectionSeance;
 import app.etutorat.models.queryobjects.ProjectionTuteur;
@@ -30,8 +32,11 @@ import app.etutorat.models.requestobjects.ValidationTuteurToken;
 import app.etutorat.services.AdminService;
 import app.exceptions.DuplicateUniqueKeyException;
 import app.exceptions.NoElementException;
+import app.exceptions.SeanceCollisionException;
+import app.exceptions.TooManyHoursException;
 import app.exceptions.formException.BadCreateAdminFormException;
 import app.exceptions.formException.BadRegisterFormException;
+import app.exceptions.formException.BadSeanceFormException;
 import app.exceptions.formException.BadUpdateFormException;
 
 @Controller
@@ -469,6 +474,68 @@ public class AdminController {
 				throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not authorized !");		
 			}
 		
+	}
+	
+	@PostMapping("/createSeance")
+	public ResponseEntity<Seance> createSeance(@RequestBody SeanceForm form)  {
+		
+		System.out.println("Create");
+		//Vérification des droits
+		if( ((UserToken)session.getAttribute("token")).getType().equals("superAdmin")  || ((UserToken)session.getAttribute("token")).getType().equals("admin")   ) {
+			try {
+				form.isValid();
+			
+				Seance s = adms.createSeance(form);
+				return ResponseEntity.ok(s);
+			}
+			catch(BadSeanceFormException ex) {
+				throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, ex.getMessage(), ex);
+			} 
+			catch(SeanceCollisionException ex) {
+				throw new ResponseStatusException(HttpStatus.CONFLICT, ex.getMessage(), ex);
+			}
+			catch(TooManyHoursException ex) {
+				throw new ResponseStatusException(HttpStatus.FORBIDDEN, ex.getMessage(), ex);
+			}
+			
+		}
+				
+		else {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not authorized !");		
+		}
+	
+	}
+	
+	@PostMapping("/updateSeance")
+	public ResponseEntity<String> updateSeance(@RequestBody UpdateForm form)  {
+		
+		System.out.println("Here");
+		//Vérification des droits
+		if( ((UserToken)session.getAttribute("token")).getType().equals("superAdmin")  || ((UserToken)session.getAttribute("token")).getType().equals("admin")   ) {
+			try {
+				form.isValid();
+			
+				adms.updateSeance(form);
+				return ResponseEntity.ok("");
+			}
+			catch(BadUpdateFormException ex) {
+				throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, ex.getMessage(), ex);
+			} 
+			catch(NoElementException ex) {
+				throw new ResponseStatusException(HttpStatus.NOT_FOUND, ex.getMessage(), ex);
+			}
+			catch(SeanceCollisionException ex) {
+				throw new ResponseStatusException(HttpStatus.CONFLICT, ex.getMessage(), ex);
+			}
+			catch(TooManyHoursException ex) {
+				throw new ResponseStatusException(HttpStatus.FORBIDDEN, ex.getMessage(), ex);
+			}
+		}
+				
+		else {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not authorized !");		
+		}
+	
 	}
 	
 	@GetMapping("/getSalles")

@@ -28,7 +28,7 @@
               </div>
 
               <div id="btnUpdateModal" class="row justify-content-center mt-3 pb-3 border-bottom">
-                  <button type="button" class="btn btn-secondary" (click)="openUpdateTuteurModal(updateModal)">Modifier</button>
+                  <button type="button" class="btn btn-secondary" (click)="openUpdateAdminModal(updateModal)">Modifier</button>
               </div>
             
           </div>
@@ -53,13 +53,14 @@
 <ng-template #updateModal let-modal>
  
     <div class="modal-body">
-      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
-        <span aria-hidden="true">&times;</span>
-      </button>
-
+      <div class="row justify-content-end" id="closeModal">
+        <button type="button" class="close "  aria-label="Close" (click)="modal.dismiss('Cross click')">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
       <form [formGroup]="updateAdminForm" (ngSubmit)="modal.close('update')" *ngIf="currentAdmin != null">
   
-          <div class="row">
+          <div class="row justify-content-center">
             <div class="form-group col-md-3">
               <label for="surnameInput">Nom :</label>  
               <input id="surnameInput" class="form-control" type="text" formControlName="nom" required>
@@ -73,7 +74,7 @@
           </div>
           
           
-          <div class="row">
+          <div class="row justify-content-center">
             <div class="form-group col-md-3">
               <label for="emailInput">Email :</label>  
               <input id="emailInput" class="form-control" type="text" formControlName="email" required>
@@ -86,8 +87,9 @@
             </div>
           </div>
           
-            
+          <div class="row justify-content-center mt-3 pt-3 border-top">
             <button type="submit" class="btn btn-outline-primary" [disabled]="!updateAdminForm.valid">Modifier le compte administrateur</button>
+          </div>
           </form>
 
     </div>
