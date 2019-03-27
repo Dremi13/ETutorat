@@ -58,7 +58,8 @@ public class SeanceForm implements Form, Serializable {
 		
 		if(this.getDateDebut().isAfter(this.getDateFin())) 										{ res = false; message += " the end should be after the start"; 	}
 		if(this.getDateDebut().until(this.getDateFin(), ChronoUnit.HOURS) > 2)					{ res = false; message += " the course shouldn't last more than 2 hours"; 	}
-		if(this.getDateDebut().getHour() < 8 || this.getDateDebut().getHour() > 20 || this.getDateFin().getHour() < 8 || this.getDateFin().getHour() > 20)				{ res = false; message += " the course should respect the hours (8h-20h)"; 	}
+		//GMT+1 client side but UTC server side, so -1h.
+		if(this.getDateDebut().getHour() < 7 || this.getDateDebut().getHour() > 19 || this.getDateFin().getHour() < 7 || this.getDateFin().getHour() > 19)				{ res = false; message += " the course should respect the hours (8h-20h GMT+1)"; 	}
 		if(this.getNbmaxtutores() > this.getSalle().getCapacite())								{ res = false; message += " nbmaxtutores can't exceed the room capacity"; 	}
 		
 		if(!res) throw new BadSeanceFormException(message);

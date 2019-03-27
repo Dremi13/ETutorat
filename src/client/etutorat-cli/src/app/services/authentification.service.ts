@@ -34,8 +34,12 @@ export class AuthentificationService {
   }
 
 
-  register(registerForm){
+  registerTuteur(registerForm){
     return this.http.post<Token>(environment.API_URL+"/auth/register/tuteur", registerForm, {withCredentials: true})
+  }
+
+  registerTutore(registerForm){
+    return this.http.post<Token>(environment.API_URL+"/auth/register/tutore", registerForm, {withCredentials: true})
   }
 
   
