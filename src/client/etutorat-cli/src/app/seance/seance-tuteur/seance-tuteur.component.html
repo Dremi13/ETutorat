@@ -60,10 +60,10 @@
           </div>
   
   
-          <div class="form-group col-md-3">
+          <div class="form-group col-md-3" *ngIf="this.currentUser != null">
             
             <label for="tuteurInput">Tuteur :</label>
-            <input id="tuteurInput" class="form-control" type="text" formControlName="tuteur"disabled>
+            <input  id="tuteurInput" class="form-control" type="text" value="{{currentUser.nom}} {{currentUser.prenom}}" [readonly]="true">
   
             
           </div>
@@ -175,18 +175,12 @@
             </div>
   
   
-            <div class="form-group col-md-4">
-              
-              <label for="tuteurInput">Tuteur :</label>
-              <select formControlName="tuteur" class="custom-select" id="selectTuteur" [compareWith]="compareFn">
-                <option *ngFor="let tut of allTuteurs; index as i" [ngValue]="tut">
-                  {{tut.nom}} {{tut.prenom}}
-                </option>
-  
-              </select>
-  
-              
+           <div class="form-group col-md-3" *ngIf="this.currentUser != null">
+                  <label for="tuteurInput">Tuteur :</label>
+                  <input  id="tuteurInput" class="form-control" type="text" value="{{currentUser.nom}} {{currentUser.prenom}}" [readonly]="true">
             </div>
+  
+              
             <div class="form-group col-md-4">
               <label for="inscritBtn"></label>
               <button type="button" class="btn btn-outline-secondary" id="inscritBtn">Inscrits</button>

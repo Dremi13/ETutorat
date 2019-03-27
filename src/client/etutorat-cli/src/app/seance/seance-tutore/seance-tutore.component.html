@@ -1,3 +1,70 @@
-<p>
-  seance-tutore works!
-</p>
+<div class="d-flex flex-column align-items-center">
+    <div>
+      {{viewDate | calendarDate:(view + 'ViewTitle'):locale }}
+    </div>
+    <div>
+      <button mwlCalendarPreviousView class="btn btn-secondary" [(viewDate)]="viewDate" [view]="view" [disabled]="viewDate < minDate">&lt;</button> 
+      <button mwlCalendarToday class="btn btn-secondary" [(viewDate)]="viewDate"> Semaine actuelle : ({{currentWeekStart.toLocaleDateString('fr-FR')}} - {{currentWeekEnd.toLocaleDateString('fr-FR')}}) </button>
+      <button mwlCalendarNextView class="btn btn-secondary" [(viewDate)]="viewDate" [view]="view" [disabled]="viewDate > maxDate">&gt;</button>
+    </div>
+    </div>
+    
+    
+<div id="weekCalendar">
+      <mwl-calendar-week-view
+        [viewDate]="viewDate"
+        [events]="events"
+        [excludeDays]="[0]"
+        [dayStartHour]="8"
+        [dayEndHour]="19"
+        [weekStartsOn]="1"
+        [hourSegmentHeight]="60"
+        (eventClicked)="clickEvent($event.event)"
+        [eventTitleTemplate]="customEventTitleTemplate"
+        [locale]="locale">
+    
+      </mwl-calendar-week-view>
+</div>
+
+
+<ng-template
+      #customEventTitleTemplate
+      let-event="event"
+      let-view="view">
+      <p
+        class="cal-event-title text-center">
+        {{event.title}} <br>
+        <ng-template [ngIf]="event.meta.outilAV == ''">
+          {{event.meta.salle.nom}} - {{event.meta.salle.site}} <br>
+        </ng-template>
+        <ng-template [ngIf]="event.meta.outilAV != ''">
+          {{event.meta.outilAV}}
+        </ng-template>
+        {{event.meta.tuteur.nom.toUpperCase()}} - {{event.meta.tuteur.prenom}}
+      </p>
+      
+</ng-template>
+
+<ng-template #modalEvent let-close="close">
+    <div class="modal-header">
+      <h5 class="modal-title">{{eventClicked.title}}</h5>
+      <button type="button" class="close" (click)="close()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body text-center">
+      <div>
+        <div *ngIf="eventClicked.meta.outilAV == ''">
+          <p>{{ eventClicked.meta.salle.nom }} - {{ eventClicked.meta.salle.site }}</p>
+        </div>
+        <div *ngIf="eventClicked.meta.outilAV != ''">
+            <p>{{ eventClicked.meta.outilAV }}</p>
+          </div>
+        <p>{{ eventClicked.meta.tuteur.nom.toUpperCase() }} {{ eventClicked.meta.tuteur.prenom }}</p>
+        <p>{{eventClicked.start.getHours()}}.{{eventClicked.start.getMinutes()}} - {{eventClicked.end.getHours()}}.{{eventClicked.end.getMinutes()}}</p>
+      </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-dark" (click)="join()">S'inscire à ce cours</button>
+      </div>
+  </ng-template>
