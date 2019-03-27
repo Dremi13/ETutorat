@@ -49,7 +49,15 @@ export class AuthentificationService {
   }
   
   addToken(token: Token){
-    console.log("TOKEN ENVOYE")
+    if(token != null){
+      localStorage.setItem("type",token.type);
+      localStorage.setItem("login",token.login);
+    }
+    else {
+      localStorage.removeItem("type");
+      localStorage.removeItem("login");
+    }
+    
     this.token.next(token);
   }
 

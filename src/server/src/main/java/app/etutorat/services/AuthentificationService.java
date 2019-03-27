@@ -15,6 +15,7 @@ import app.etutorat.dao.TuteurRepository;
 import app.etutorat.dao.TutoreRepository;
 import app.etutorat.models.Etudiant;
 import app.etutorat.models.Tuteur;
+import app.etutorat.models.Tutore;
 import app.etutorat.models.Utilisateur;
 import app.etutorat.models.requestobjects.forms.EtudiantForm;
 import app.etutorat.models.requestobjects.forms.SigninForm;
@@ -154,7 +155,7 @@ public class AuthentificationService {
 	
 	
 	//Register des tuteurs
-	public UserToken register(EtudiantForm form) throws BadRegisterFormException {
+	public UserToken registerTuteur(EtudiantForm form) throws BadRegisterFormException {
 		
 	
 		UserToken token = new UserToken();
@@ -178,6 +179,32 @@ public class AuthentificationService {
         return token;
 
 	}
+	
+	//Register des tutores
+		public UserToken registerTutore(EtudiantForm form) throws BadRegisterFormException {
+			
+		
+			UserToken token = new UserToken();
+			
+	        try {
+	        	byte[][] hash = hashPassword(form.getPassword());
+	        	Tutore t = new Tutore(form.getNom(),form.getPrenom(),form.getEmail(),hash[1],hash[0],form.getCodeetu(),form.getTelephone(),form.getFiliere());
+		        token.setLogin(form.getCodeetu());
+		        token.setType("tutore");
+		        
+		        tor.save(t);
+		        
+		        this.httpSession.setAttribute("token", token);
+		       
+	        	
+	        } catch (NoSuchProviderException | NoSuchAlgorithmException ex) {
+	        	ex.printStackTrace();
+	        }
+	        
+	        
+	        return token;
+
+		}
 	
 
 

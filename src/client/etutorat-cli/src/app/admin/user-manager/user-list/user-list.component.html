@@ -1,15 +1,17 @@
-<ngb-tabset [justify]="'center'">
-    <ngb-tab>
-        <ng-template ngbTabTitle>Tuteur</ng-template>
-        <ng-template ngbTabContent>
-            <app-tuteur-list></app-tuteur-list>
-        </ng-template>
-    </ngb-tab>
+<div class="onglet">
+    <ngb-tabset [justify]="'center'">
+        <ngb-tab>
+            <ng-template ngbTabTitle>Tuteur</ng-template>
+            <ng-template ngbTabContent>
+                <app-tuteur-list></app-tuteur-list>
+            </ng-template>
+        </ngb-tab>
 
-    <ngb-tab>
-        <ng-template ngbTabTitle>Tutore</ng-template>
-        <ng-template ngbTabContent>
-            <app-tutore-list></app-tutore-list>
-        </ng-template>
-    </ngb-tab>
-</ngb-tabset>
+        <ngb-tab>
+            <ng-template ngbTabTitle>Tutore</ng-template>
+            <ng-template ngbTabContent>
+                <app-tutore-list></app-tutore-list>
+            </ng-template>
+        </ngb-tab>
+    </ngb-tabset>
+</div>

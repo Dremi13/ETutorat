@@ -10,20 +10,21 @@
 </div>
 
 
-<mwl-calendar-week-view
-   [viewDate]="viewDate"
-   [events]="events"
-   [excludeDays]="[0]"
-   [dayStartHour]="8"
-   [dayEndHour]="19"
-   [weekStartsOn]="1"
-   [hourSegmentHeight]="60"
-   (eventClicked)="clickEvent($event.event)"
-   [eventTitleTemplate]="customEventTitleTemplate"
-   [locale]="locale">
+<div id="weekCalendar">
+  <mwl-calendar-week-view
+    [viewDate]="viewDate"
+    [events]="events"
+    [excludeDays]="[0]"
+    [dayStartHour]="8"
+    [dayEndHour]="19"
+    [weekStartsOn]="1"
+    [hourSegmentHeight]="60"
+    (eventClicked)="clickEvent($event.event)"
+    [eventTitleTemplate]="customEventTitleTemplate"
+    [locale]="locale">
 
- </mwl-calendar-week-view>
-
+  </mwl-calendar-week-view>
+</div>
 
 <div id="addSeance" class="card text-center">
   <div class="card-body">
@@ -32,14 +33,14 @@
     <form [formGroup]="createEventForm" (ngSubmit)="createEvent()">
 
    
-      <div class="row">
-        <div class="form-group col-md-4">
+      <div class="row justify-content-center">
+        <div class="form-group col-md-3">
           <label for="titleInput">Titre :</label>  
           <input id="titleInput" class="form-control" type="text" formControlName="title" required>
         </div>
 
 
-        <div class="form-group col-md-4">
+        <div class="form-group col-md-3">
           
           <label for="tuteurInput">Tuteur :</label>
           <select formControlName="tuteur" class="custom-select" id="selectTuteur" [compareWith]="compareFn">
@@ -54,11 +55,11 @@
        
 
       </div>
-      <div class="row">
-        <div class="form-group col-md-4">
+      <div class="row justify-content-center">
+        <div class="form-group col-md-3 datepicker">
           <label for="startDateInput">Jour :</label>
 
-          <div class="input-group datepicker">
+          <div class="input-group ">
             <input class="form-control" id="startDateInput" formControlName="date" ngbDatepicker #d="ngbDatepicker">
             <div class="input-group-append">
                 <button class="btn btn-outline-secondary calendar" (click)="d.toggle()" type="button"><i class="far fa-calendar-alt"></i></button>
@@ -68,9 +69,9 @@
         
       
 
-        <div class="form-group col-md-8">
+        <div class="form-group col-md-4">
           <label>Horaires :</label>
-          <div class="input-group">
+          <div class="input-group row justify-content-center">
               <ngb-timepicker class="timepicker" formControlName="startTime"></ngb-timepicker>
               <ngb-timepicker class="timepicker" formControlName="endTime"></ngb-timepicker>
           </div>

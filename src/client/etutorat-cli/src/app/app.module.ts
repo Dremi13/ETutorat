@@ -16,6 +16,13 @@ import { AdminIndexComponent } from './admin/admin-index/admin-index.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AdminModule } from './admin/admin.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { RegisterTuteurComponent } from './register/register-tuteur/register-tuteur.component';
+import { RegisterTutoreComponent } from './register/register-tutore/register-tutore.component';
+import { SeanceComponent } from './seance/seance.component';
+import { SeanceTuteurComponent } from './seance/seance-tuteur/seance-tuteur.component';
+import { SeanceTutoreComponent } from './seance/seance-tutore/seance-tutore.component';
+import { CalendarModule, DateAdapter } from 'angular-calendar';
+import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 
 
 
@@ -30,7 +37,12 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     PageNotFoundComponent,
     RegisterComponent,
     IndexComponent,
-    AdminIndexComponent
+    AdminIndexComponent,
+    RegisterTuteurComponent,
+    RegisterTutoreComponent,
+    SeanceComponent,
+    SeanceTuteurComponent,
+    SeanceTutoreComponent
   ],
   imports: [
     NgbModule,
@@ -41,6 +53,10 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     HttpClientModule,
     AppRoutingModule,
     BrowserAnimationsModule,
+    CalendarModule.forRoot({
+      provide: DateAdapter,
+      useFactory: adapterFactory
+    }),
     
     
   ],

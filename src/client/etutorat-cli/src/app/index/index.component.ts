@@ -13,14 +13,14 @@ import { Token } from '../responseBodies/token';
 export class IndexComponent implements OnInit {
 
   
-  
+  type: string;
 
 
   constructor(private as: AuthentificationService,
               private router: Router) { }
 
   ngOnInit() {
-    
+    this.type = localStorage.getItem("type");
   }
 
 }
