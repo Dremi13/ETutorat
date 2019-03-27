@@ -50,10 +50,12 @@ export class AuthentificationService {
   
   addToken(token: Token){
     if(token != null){
+      localStorage.setItem("id",token.id.toString());
       localStorage.setItem("type",token.type);
       localStorage.setItem("login",token.login);
     }
     else {
+      localStorage.removeItem("id");
       localStorage.removeItem("type");
       localStorage.removeItem("login");
     }

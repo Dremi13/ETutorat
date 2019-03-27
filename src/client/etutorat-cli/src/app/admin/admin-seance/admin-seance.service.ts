@@ -30,6 +30,9 @@ export class AdminSeanceService {
     return this.http.post(environment.API_URL+"/"+environment.API_ADMIN+"/updateSeance",{id: id, form: form},{withCredentials: true});
   }
 
+  removeSeance(id){
+    return this.http.post(environment.API_URL+"/"+environment.API_ADMIN+"/removeSeance",id,{withCredentials: true});
+  }
   
 
   convertSeanceToEvent(seance: Seance): CalendarEvent {

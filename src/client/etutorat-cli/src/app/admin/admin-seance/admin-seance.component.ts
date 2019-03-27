@@ -433,7 +433,11 @@ export class AdminSeanceComponent implements OnInit {
   }
 
   removeEvent(event){
-    this.events = this.events.filter(iEvent => iEvent !== event);
+    
+    this.adminSeanceService.removeSeance(event.meta.id).subscribe(() => {
+      this.events = this.events.filter(iEvent => iEvent !== event);
+    });
+    
   }
 
 

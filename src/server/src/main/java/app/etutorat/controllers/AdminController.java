@@ -538,6 +538,28 @@ public class AdminController {
 	
 	}
 	
+	@PostMapping("/removeSeance")
+	public ResponseEntity<String> removeSeance(@RequestBody Long id)  {
+		
+		System.out.println("Here");
+		//Vérification des droits
+		if( ((UserToken)session.getAttribute("token")).getType().equals("superAdmin")  || ((UserToken)session.getAttribute("token")).getType().equals("admin")   ) {
+			try {
+				
+				adms.removeSeance(id);
+				return ResponseEntity.ok("");
+			}
+			catch(NoElementException ex) {
+				throw new ResponseStatusException(HttpStatus.NOT_FOUND, ex.getMessage(), ex);
+			}
+		}
+				
+		else {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not authorized !");		
+		}
+	
+	}
+	
 	@GetMapping("/getSalles")
 	public ResponseEntity<List<Salle>> getSalles()  {
 		

@@ -504,6 +504,16 @@ public class AdminService {
 		
 	}
 	
+	public void removeSeance(Long idSeance) throws NoElementException {
+		
+		Optional<Seance> os = ser.findById(idSeance);
+		if(!os.isPresent()) throw new NoElementException(idSeance);
+		Seance s = os.get();
+		
+		
+		ser.delete(s);
+	}
+	
 	//create = true if s is a new seance, false if it's an update. Use to insure s doesn't collide with itself.
 	//Throw SeanceCollisionException if there is collision.
 	public void checkCollision(Seance s, boolean create) throws SeanceCollisionException {

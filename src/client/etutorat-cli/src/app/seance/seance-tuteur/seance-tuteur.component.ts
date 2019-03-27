@@ -48,13 +48,13 @@ export class SeanceTuteurComponent implements OnInit {
     {
       label: '<i class="fas fa-edit"></i>',
       onClick: ({ event }: { event: CalendarEvent }): void => {
-        //this.openUpdateEvent(event);
+        this.openUpdateEvent(event);
       }
     },
     {
       label: '<i class="fas fa-times"></i>',
       onClick: ({ event }: { event: CalendarEvent }): void => {
-        //this.removeEvent(event);
+        this.removeEvent(event);
       }
     }
   ];
@@ -152,8 +152,10 @@ export class SeanceTuteurComponent implements OnInit {
     this.seanceService.getCurrentTuteur().subscribe(
       (resp : Tuteur) => {
         this.currentUser = resp;
+        console.log(this.currentUser);
       }
     );
+
 
     this.seanceService.getSalles()
     .subscribe(
@@ -164,7 +166,7 @@ export class SeanceTuteurComponent implements OnInit {
           this.eventBySalle[i] = new Array<CalendarEvent>();
         }
 
-        this.createEventForm.get("tuteur").setValue(this.currentUser);
+        
         this.createEventForm.get("salle").setValue(this.allSalles[0]);
         var today = new Date();
         this.createEventForm.get("date").setValue({year: today.getFullYear(), month: today.getMonth()+1, day: today.getDate()});
@@ -201,7 +203,7 @@ export class SeanceTuteurComponent implements OnInit {
                   event];
                   
                 }
-                console.log(this.events);
+                this.createEventForm.get("tuteur").setValue(this.currentUser);
               },
               errorResponse => {
                 if(errorResponse.status == 404){
@@ -211,7 +213,7 @@ export class SeanceTuteurComponent implements OnInit {
                 
             });
         
-
+        
       },
       error => {
         if(error.status == 404){
@@ -346,7 +348,7 @@ export class SeanceTuteurComponent implements OnInit {
       outilAV: this.createEventForm.get("checkAV").value ? this.createEventForm.get("outilAV").value : "",
       tuteur: this.createEventForm.get("tuteur").value,
       salle: this.createEventForm.get("salle").value,
-      nbmaxtutores: 0
+      nbmaxtutores: 10
     }
 
 
@@ -361,12 +363,12 @@ export class SeanceTuteurComponent implements OnInit {
           tuteur: this.createEventForm.get("tuteur").value,
           outilAV: this.createEventForm.get("checkAV").value ? this.createEventForm.get("outilAV").value : "",
           salle: this.createEventForm.get("salle").value,
-          nbmaxtutores: 0,
+          nbmaxtutores: 10,
           tutores: []
         }
     };
 
-
+    console.log(newSeance);
     if(this.checkCollision(newEvent,null,this.createEventForm)) return;
 
     this.seanceService.createSeance(newSeance).subscribe(
@@ -417,10 +419,12 @@ export class SeanceTuteurComponent implements OnInit {
 
   removeEvent(event){
     if(event.meta.tuteur.id !== this.currentUser.id) return;
-    this.events = this.events.filter(iEvent => iEvent !== event);
+    this.seanceService.removeSeance(event.meta.id).subscribe(()=>{
+      this.events = this.events.filter(iEvent => iEvent !== event);
+      this.eventBySalle[event.meta.salle.id-1] = this.eventBySalle[event.meta.salle.id-1].filter(iEvent => iEvent !== event);
+    });
+    
 
-
-    //FAIRE LE BACKEND ET SUR L'ADMIN AUSSI
   }
 
 }
