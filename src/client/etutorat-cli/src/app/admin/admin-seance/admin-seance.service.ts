@@ -22,8 +22,18 @@ export class AdminSeanceService {
     return this.http.get<Salle[]>(environment.API_URL+"/"+environment.API_ADMIN+"/getSalles",{withCredentials: true});
   }
 
+  createSeance(form){
+    return this.http.post(environment.API_URL+"/"+environment.API_ADMIN+"/createSeance",form,{withCredentials: true});
+  }
+
+  updateSeance(id,form){
+    return this.http.post(environment.API_URL+"/"+environment.API_ADMIN+"/updateSeance",{id: id, form: form},{withCredentials: true});
+  }
+
+  
 
   convertSeanceToEvent(seance: Seance): CalendarEvent {
+
     return {
       start: new Date(seance.dateDebut),
       end: new Date(seance.dateFin),
@@ -36,10 +46,11 @@ export class AdminSeanceService {
       },
       draggable: false,
       meta: {
+        id: seance.id,
         tuteur: seance.tuteur,
         outilAV: seance.outilAV,
         salle: seance.salle,
-        nbmax: seance.nbmaxtutores,
+        nbmaxtutores: seance.nbmaxtutores,
         tutores: seance.tutores
       }
     }

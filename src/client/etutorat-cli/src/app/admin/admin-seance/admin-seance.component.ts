@@ -4,7 +4,6 @@ import { AdminSeanceService } from './admin-seance.service';
 import { Seance } from '../../responseBodies/seance';
 import { CalendarView, CalendarEventAction } from 'angular-calendar';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { CalendarEventActionsComponent } from 'angular-calendar/modules/common/calendar-event-actions.component';
 import { FormGroup, FormControl, Validators, ValidatorFn, ValidationErrors } from '@angular/forms';
 import { Tuteur } from '../../responseBodies/tuteur';
 import { AdminService } from '../services/admin.service';
@@ -65,6 +64,16 @@ export class AdminSeanceComponent implements OnInit {
 
   events: CalendarEvent[] = [];
   eventClicked : CalendarEvent;
+
+  //Used to choose a Tuteur for a course.
+  allTuteurs : Tuteur[];
+
+
+  //Used to choose the room for a course.
+  allSalles: Salle[];
+
+  
+  eventBySalle: CalendarEvent[][] = [];
   
   @ViewChild('updateEventModal') updateEventModal: TemplateRef<any>;
   @ViewChild('modalEvent') modalEvent: TemplateRef<any>;
@@ -76,7 +85,7 @@ export class AdminSeanceComponent implements OnInit {
     const start = control.get('startTime').value;
     const end = control.get('endTime').value;
   
-    return (start.hour > end.hour || (start.hour === end.hour && start.minute > end.minute)) ? { 'endBeforeStart': true } : null;
+    return (start.hour > end.hour || (start.hour === end.hour && start.minute >= end.minute)) ? { 'endBeforeStart': true } : null;
   };
 
 
@@ -99,29 +108,47 @@ export class AdminSeanceComponent implements OnInit {
   
     return (end.hour - start.hour > 2 || (end.hour - start.hour == 2 && end.minute - start.minute > 0)) ? { 'endBeforeStart': true } : null;
   };
+  
+  allOutilsAV: string[] = [
+      "Skype",
+      "Discord"
+  ];
 
   updateEventForm = new FormGroup({
     title: new FormControl('', [Validators.required]),
     date: new FormControl('', [Validators.required]),
     startTime: new FormControl('', [Validators.required]),
-    endTime: new FormControl('', [Validators.required])
+    endTime: new FormControl('', [Validators.required]),
+    checkAV: new FormControl(false),
+    outilAV: new FormControl(this.allOutilsAV[0]),
+    salle: new FormControl(),
+    tuteur: new FormControl()
   }, { validators: [this.endAfterStart, this.dayLimit, this.maxDuration]});
 
 
+  createEventForm = new FormGroup({
+    title: new FormControl('', [Validators.required]),
+    date: new FormControl('', [Validators.required]),
+    startTime: new FormControl('', [Validators.required]),
+    endTime: new FormControl('', [Validators.required]),
+    checkAV: new FormControl(false),
+    outilAV: new FormControl(this.allOutilsAV[0]),
+    salle: new FormControl(),
+    tuteur: new FormControl()
+  }, { validators: [this.endAfterStart, this.dayLimit, this.maxDuration]});
+
+  compareFn(c1: any, c2:any): boolean {     
+    return c1 && c2 ? c1.id === c2.id : c1 === c2; 
+  }
   
   
 
-  //Used to choose a Tuteur for a course.
-  tuteur: Tuteur;
-  allTuteurs : Tuteur[];
-
-
-  //Used to choose the room for a course.
-  salle: Salle;
-  allSalles: Salle[];
+  
 
   
-  eventBySalle: Event[][];
+  
+  alertDangerOpened = false;
+  timeOut;
 
 
   constructor(private adminSeanceService: AdminSeanceService,
@@ -130,7 +157,8 @@ export class AdminSeanceComponent implements OnInit {
     
   }
 
- 
+  
+
 
   ngOnInit() {
 
@@ -150,37 +178,69 @@ export class AdminSeanceComponent implements OnInit {
     .subscribe(
       (resp : Salle[]) => {
         this.allSalles = resp;
+
+        for(var i = 0; i < this.allSalles.length; i++){
+          this.eventBySalle[i] = new Array<CalendarEvent>();
+        }
+
+        this.createEventForm.get("salle").setValue(this.allSalles[0]);
+        var today = new Date();
+        console.log(today);
+        this.createEventForm.get("date").setValue({year: today.getFullYear(), month: today.getMonth()+1, day: today.getDate()});
+        
+        if(today.getHours() > 20){
+          this.createEventForm.get("startTime").setValue({hour: 19, minute: 45});
+          this.createEventForm.get("endTime").setValue({hour: 20, minute: 0});
+        }
+        else if(today.getHours() < 8){
+          this.createEventForm.get("startTime").setValue({hour: 8, minute: 0});
+          this.createEventForm.get("endTime").setValue({hour: 8, minute: 15});
+        }
+
+        else {
+          this.createEventForm.get("startTime").setValue({hour: today.getHours(), minute: today.getMinutes()});
+          this.createEventForm.get("endTime").setValue({hour: today.getHours(), minute: today.getMinutes()+15});
+        }
+        
+        
+
+        console.log(this.createEventForm.get("date").value.year);
+
+
+        this.adminSeanceService.getSeances().subscribe(
+              (resp : Seance[]) => {
+                var event : CalendarEvent;
+                for(let seance of resp) {
+                  
+
+                  event = this.adminSeanceService.convertSeanceToEvent(seance);
+                  event.actions = this.actions;
+                  this.eventBySalle[seance.salle.id-1].push(event);
+                  this.events = [...this.events,
+                  event];
+                  
+                }
+                console.log(this.events);
+              },
+              errorResponse => {
+                if(errorResponse.status == 404){
+                  alert(errorResponse.message);
+                //this.router.navigate(['/signin']);
+                }
+                
+            });
+        
+
       },
       error => {
         if(error.status == 404){
         alert(error.message);
       }
     });
+    
+    
 
-
-    this.adminSeanceService.getSeances().subscribe(
-      (resp : Seance[]) => {
-        console.log(resp);
-        var event : CalendarEvent;
-        for(let seance of resp) {
-          
-
-          event = this.adminSeanceService.convertSeanceToEvent(seance);
-          event.actions = this.actions;
-          this.events = [...this.events,
-          event];
-          console.log(this.events);
-        }
-
-
-      },
-      errorResponse => {
-        if(errorResponse.status == 404){
-          alert(errorResponse.message);
-        //this.router.navigate(['/signin']);
-        }
-        
-    });
+    
 
   }
 
@@ -200,7 +260,6 @@ export class AdminSeanceComponent implements OnInit {
         this.eventClicked = null;
       },
       (reason) => {
-        console.log("Annulation :"+reason);
         this.eventClicked = null;
       }
     
@@ -211,16 +270,21 @@ export class AdminSeanceComponent implements OnInit {
   //Même un administrateur ne peut pas modifier les informations primordiales => celle fausserait l'inscription des tutores. Par conséquent, seules le nombre maximal d'inscrits et la liste des inscrits peuvent être modifiés.
   openUpdateEvent(event: CalendarEvent){
     this.eventClicked = event;
-    this.tuteur = event.meta.tuteur;
-    this.salle = event.meta.salle;
-    this.modalService.open(this.updateEventModal,{ size: 'lg' });
+    
+    var salle = this.allSalles.find(s => s.id === this.eventClicked.meta.salle.id);
+
     this.updateEventForm.setValue({
       title: this.eventClicked.title,
-      date: {year: this.eventClicked.start.getFullYear(), month: this.eventClicked.start.getMonth(), day: this.eventClicked.start.getDate()},
+      date: {year: this.eventClicked.start.getFullYear(), month: this.eventClicked.start.getMonth()+1, day: this.eventClicked.start.getDate()},
       startTime: {hour: this.eventClicked.start.getHours(), minute: this.eventClicked.start.getMinutes()},
-      endTime: {hour: this.eventClicked.end.getHours(), minute: this.eventClicked.end.getMinutes()}
-
+      endTime: {hour: this.eventClicked.end.getHours(), minute: this.eventClicked.end.getMinutes()},
+      checkAV: this.eventClicked.meta.outilAV !== "",
+      outilAV: this.eventClicked.meta.outilAV === "" ? this.allOutilsAV[0] : this.eventClicked.meta.outilAV,
+      tuteur: this.eventClicked.meta.tuteur,
+      salle: salle
     });
+
+    this.modalService.open(this.updateEventModal,{ size: 'lg' });
 
   }
 
@@ -228,51 +292,131 @@ export class AdminSeanceComponent implements OnInit {
     let start = this.createDatetime(this.updateEventForm.get("date").value,this.updateEventForm.get("startTime").value);
     let end = this.createDatetime(this.updateEventForm.get("date").value,this.updateEventForm.get("endTime").value);
 
+    var newEvent: CalendarEvent = {
+      title: this.updateEventForm.get("title").value,
+      actions: this.actions,
+      color: colors.red,
+      start: start,
+      end: end,
+      meta: {
+          id: this.eventClicked.meta.id,
+          tuteur: this.updateEventForm.get("tuteur").value,
+          outilAV: this.updateEventForm.get("checkAV").value ? this.updateEventForm.get("outilAV").value : "",
+          salle: this.updateEventForm.get("salle").value,
+          nbmaxtutores: this.eventClicked.meta.nbmaxtutores,
+          tutores: this.eventClicked.meta.tutores
+        }
+    };
+    if(this.checkCollision(newEvent, this.eventClicked,this.updateEventForm)){
+      return;
+    }
+
     this.events = this.events.map(iEvent => {
       if (iEvent === this.eventClicked) {
-        return {
-          ...this.eventClicked,
-          title: this.updateEventForm.get("title").value,
-          start: start,
-          end: end,
-          meta: {
-            tuteur: this.tuteur,
-            outilAV: this.eventClicked.meta.outilAV,
-            salle: this.salle,
-            nbmax: this.eventClicked.meta.nbmax,
-            tutores: this.eventClicked.meta.tutores
-          }
-        };
+        return newEvent;
       }
       return iEvent;
     });
+
+    this.eventBySalle[this.eventClicked.meta.salle.id-1] = this.eventBySalle[this.eventClicked.meta.salle.id-1].filter(iEvent => iEvent !== this.eventClicked);
+    if(newEvent.meta.outilAV == "") this.eventBySalle[newEvent.meta.salle.id-1].push(newEvent);
+    
+    this.eventClicked = newEvent;
+
+    this.adminSeanceService.updateSeance(newEvent.meta.id,{
+      sujet: newEvent.title,
+      start: newEvent.start,
+      end: newEvent.end,
+      outilAV: newEvent.meta.outilAV,
+      tuteur: newEvent.meta.tuteur,
+      salle: newEvent.meta.salle,
+      nbmaxtutores: newEvent.meta.nbmaxtutores
+    }).subscribe();
+
     this.modalService.dismissAll();
-    console.log(this.updateEventForm.value);
     
   }
 
+
+  createEvent(){
+    let start = this.createDatetime(this.createEventForm.get("date").value,this.createEventForm.get("startTime").value);
+    let end = this.createDatetime(this.createEventForm.get("date").value,this.createEventForm.get("endTime").value);
+
+    var newSeance = {
+      sujet: this.createEventForm.get("title").value,
+      start: start,
+      end: end,
+      outilAV: this.createEventForm.get("checkAV").value ? this.createEventForm.get("outilAV").value : "",
+      tuteur: this.createEventForm.get("tuteur").value,
+      salle: this.createEventForm.get("salle").value,
+      nbmaxtutores: 0
+    }
+
+
+    var newEvent: CalendarEvent = {
+      title: this.createEventForm.get("title").value,
+      actions: this.actions,
+      color: colors.red,
+      start: start,
+      end: end,
+      meta: {
+          id: 0,
+          tuteur: this.createEventForm.get("tuteur").value,
+          outilAV: this.createEventForm.get("checkAV").value ? this.createEventForm.get("outilAV").value : "",
+          salle: this.createEventForm.get("salle").value,
+          nbmaxtutores: 0,
+          tutores: []
+        }
+    };
+
+
+    if(this.checkCollision(newEvent,null,this.createEventForm)) return;
+
+    this.adminSeanceService.createSeance(newSeance).subscribe(
+    (resp : Seance) => {
+      newEvent.meta.id = resp.id;
+      this.events = [...this.events,
+        newEvent];
+      if(newEvent.meta.outilAV === "") this.eventBySalle[newEvent.meta.salle.id-1].push(newEvent);
+    },
+    error => {
+      if(error.status == 404){
+      alert(error.message);
+    }
+  });
+  }
+
+
+
+  //Minus 1 because every library choose another way to start a year. Noice.
   createDatetime(date, time){
-    return new Date(date.year,date.month,date.day,time.hour,time.minute);
-  }
-
-  chooseTuteur(tuteur: Tuteur){
-    this.tuteur = tuteur;
-  }
-
-  chooseSalle(salle: Salle){
-    this.salle = salle;
+    return new Date(date.year,date.month-1,date.day,time.hour,time.minute);
   }
 
 
 
-  checkCollision(salle, datetime){
-     
+
+
+  checkCollision(event: CalendarEvent, initialEvent: CalendarEvent, form: FormGroup) : boolean {
+    
+    if(event.meta.outilAV == "") {
+      for(var ev of this.eventBySalle[event.meta.salle.id-1]){
+        
+        if(ev !== initialEvent){
+          if( (event.start >= ev.start && event.start < ev.end) || (event.end <= ev.end && event.end > ev.start) || (event.start <= ev.start && event.end >= ev.end) ){
+            form.setErrors({'collision' : true});
+            this.alertDangerOpened = true;
+            this.timeOut = setTimeout(() => {this.alertDangerOpened = false; form.setErrors({'collision': null})}, 3000);
+            return true;
+          }
+        }
+      }
+    }
+    return false;
   }
 
   removeEvent(event){
     this.events = this.events.filter(iEvent => iEvent !== event);
-    this.tuteur = null;
-    this.salle = null;
   }
 
 

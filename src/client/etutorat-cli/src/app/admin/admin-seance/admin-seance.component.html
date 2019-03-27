@@ -15,7 +15,7 @@
    [events]="events"
    [excludeDays]="[0]"
    [dayStartHour]="8"
-   [dayEndHour]="20"
+   [dayEndHour]="19"
    [weekStartsOn]="1"
    [hourSegmentHeight]="60"
    (eventClicked)="clickEvent($event.event)"
@@ -25,23 +25,116 @@
  </mwl-calendar-week-view>
 
 
+<div id="addSeance" class="card text-center">
+  <div class="card-body">
+    <h5 class="card-title">Création de séances</h5>
+    
+    <form [formGroup]="createEventForm" (ngSubmit)="createEvent()">
+
+   
+      <div class="row">
+        <div class="form-group col-md-4">
+          <label for="titleInput">Titre :</label>  
+          <input id="titleInput" class="form-control" type="text" formControlName="title" required>
+        </div>
+
+
+        <div class="form-group col-md-4">
+          
+          <label for="tuteurInput">Tuteur :</label>
+          <select formControlName="tuteur" class="custom-select" id="selectTuteur" [compareWith]="compareFn">
+            <option *ngFor="let tut of allTuteurs; index as i" [ngValue]="tut">
+              {{tut.nom}} {{tut.prenom}}
+            </option>
+
+          </select>
+
+          
+        </div>
+       
+
+      </div>
+      <div class="row">
+        <div class="form-group col-md-4">
+          <label for="startDateInput">Jour :</label>
+
+          <div class="input-group datepicker">
+            <input class="form-control" id="startDateInput" formControlName="date" ngbDatepicker #d="ngbDatepicker">
+            <div class="input-group-append">
+                <button class="btn btn-outline-secondary calendar" (click)="d.toggle()" type="button"><i class="far fa-calendar-alt"></i></button>
+            </div>
+          </div>
+        </div>
+        
+      
+
+        <div class="form-group col-md-8">
+          <label>Horaires :</label>
+          <div class="input-group">
+              <ngb-timepicker class="timepicker" formControlName="startTime"></ngb-timepicker>
+              <ngb-timepicker class="timepicker" formControlName="endTime"></ngb-timepicker>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="row justify-content-center">
+        
+        <div class="custom-control custom-checkbox col-md-3 align-middle">
+          <input class="custom-control-input" type="checkbox" formControlName="checkAV" id="checkAVcreate">
+          <label class="custom-control-label" for="checkAVcreate">
+            Séance vidéo
+          </label>
+        </div>
+        <div *ngIf="!createEventForm.get('checkAV').value">
+          <select formControlName="salle" class="custom-select" id="selectOutilAV">
+            <option *ngFor="let s of allSalles" [ngValue]="s">
+              {{ s.nom }}
+            </option>
+          </select>
+        </div>
+        <div  *ngIf="createEventForm.get('checkAV').value">
+        <select formControlName="outilAV" class="custom-select" id="selectOutilAV">
+          <option *ngFor="let outil of allOutilsAV" [ngValue]="outil">
+            {{ outil }}
+          </option>
+        </select>
+
+        </div>
+      </div>
+
+      <div class="row justify-content-center border-top mt-3 pt-3">
+          <button type="submit" class="btn btn-outline-primary" [disabled]="!createEventForm.valid">Ajouter la séance</button>
+      </div>
+  </form>
+
+  <div *ngIf="createEventForm.errors" class="mt-3 pt3">
+    <ngb-alert *ngIf="createEventForm.errors.collision" type="danger" (close)="this.alertDangerOpened = false; this.createEventForm.setErrors({'collision': null});">Collision !</ngb-alert>
+  </div>
+
+
+  </div>
+</div>
+
+
  <ng-template #modalEvent let-close="close">
   <div class="modal-header">
-    <h5 class="modal-title">Event action occurred</h5>
+    <h5 class="modal-title">{{eventClicked.title}}</h5>
     <button type="button" class="close" (click)="close()">
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
   <div class="modal-body">
     <div>
-      Event:
-      <pre>{{ eventClicked | json }}</pre>
+      <div *ngIf="eventClicked.meta.outilAV == ''">
+        <p>{{ eventClicked.meta.salle.nom }} - {{ eventClicked.meta.salle.site }}</p>
+      </div>
+      <div *ngIf="eventClicked.meta.outilAV != ''">
+          <p>{{ eventClicked.meta.outilAV }}</p>
+        </div>
+      <p>{{ eventClicked.meta.tuteur.nom.toUpperCase() }} {{ eventClicked.meta.tuteur.prenom }}</p>
+      <p>{{eventClicked.start.getHours()}}.{{eventClicked.start.getMinutes()}} - {{eventClicked.end.getHours()}}.{{eventClicked.end.getMinutes()}}</p>
     </div>
-  </div>
-  <div class="modal-footer">
-    <button type="button" class="btn btn-outline-secondary" (click)="close()">
-      OK
-    </button>
   </div>
 </ng-template>
 
@@ -89,36 +182,34 @@
           <div class="form-group col-md-4">
             
             <label for="tuteurInput">Tuteur :</label>
-            <div class="input-group">
-              <button type="button" class="btn btn-outline-secondary" disabled>{{tuteur.codeetu}}</button>
-              <div ngbDropdown  class="btn-group" role="group">
-                  <button type="button" class="btn btn-outline-secondary  dropdown-toggle-split" id="dropdownTuteur" ngbDropdownToggle></button>
-                  <div ngbDropdownMenu aria-labelledby="dropdownTuteur" clas="dropdown-menu">
-                    <ng-template ngFor let-tut [ngForOf]="allTuteurs" let-i="index">
-                      <span ngbDropdownItem *ngIf="tut.codeetu !== tuteur.codeetu" class="overflow-auto border-bottom"  (click)="chooseTuteur(tut)" style="display: inline-block; width: 10em; cursor: pointer;">{{tut.codeetu}} {{tut.email}}</span>
-                    </ng-template>                 
-                  </div>
+            <select formControlName="tuteur" class="custom-select" id="selectTuteur" [compareWith]="compareFn">
+              <option *ngFor="let tut of allTuteurs; index as i" [ngValue]="tut">
+                {{tut.nom}} {{tut.prenom}}
+              </option>
 
-                </div>
-            </div>
-          </div>
-          
-          <div class="form-group col-md-4">
+            </select>
+
             
-            <label for="tuteurInput">Salle :</label>
-            <div class="input-group">
-              <button type="button" class="btn btn-outline-secondary" disabled>{{salle.nom}}</button>
-              <div ngbDropdown  class="btn-group" role="group">
-                  <button type="button" class="btn btn-outline-secondary  dropdown-toggle-split" id="dropdownSalle" ngbDropdownToggle></button>
-                  <div ngbDropdownMenu aria-labelledby="dropdownSalle" clas="dropdown-menu">
-                    <ng-template ngFor let-s [ngForOf]="allSalles" let-i="index">
-                      <span ngbDropdownItem *ngIf="s.id !== salle.id" class="overflow-auto border-bottom"  (click)="chooseSalle(s)" style="display: inline-block; width: 10em; cursor: pointer;">{{s.nom}}</span>
-                    </ng-template>                 
-                  </div>
-
-                </div>
-            </div>
           </div>
+          <div class="form-group col-md-4">
+            <label for="inscritBtn"></label>
+            <button type="button" class="btn btn-outline-secondary" id="inscritBtn">Inscrits</button>
+            <div ngbDropdown class="btn-group" placement="bottom" role="group">
+              <button type="button" class="btn btn-outline-secondary  dropdown-toggle-split" id="dropdownTutores" ngbDropdownToggle></button>
+              <div ngbDropdownMenu aria-labelledby="dropdownTutores" clas="dropdown-menu">
+                <div *ngIf="eventClicked.meta.tutores.length != 0">
+                  <div *ngFor="let inscrit of eventClicked.meta.tutores; index as i" class="btn-group">
+                    <span ngbDropdownItem class="overflow-auto border-bottom"  style="display: inline-block; width: 30em;">{{inscrit.codeetu}} {{inscrit.email}}</span>
+                    <button type="button" class="close" aria-label="Close" (click)="removeTutore(i)"><span aria-hidden="true">&times;</span></button>
+                  </div>
+                </div>              
+                <div *ngIf="eventClicked.meta.tutores.length == 0">
+                    Aucun inscrit.
+                </div>
+              </div>
+            </div>
+        </div>
+         
 
 
         </div>
@@ -147,37 +238,37 @@
 
 
         <div class="row justify-content-center">
-          <div class="col-md-4">
-              <button type="button" class="btn btn-outline-secondary">Inscrits</button>
-              <div ngbDropdown class="btn-group" placement="bottom" role="group">
-                <button type="button" class="btn btn-outline-secondary  dropdown-toggle-split" id="dropdownTutores" ngbDropdownToggle></button>
-                <div ngbDropdownMenu aria-labelledby="dropdownTutores" clas="dropdown-menu">
-                  <div *ngIf="eventClicked.meta.tutores.length != 0">
-                    <div *ngFor="let inscrit of eventClicked.meta.tutores; index as i" class="btn-group">
-                      <span ngbDropdownItem class="overflow-auto border-bottom"  style="display: inline-block; width: 20em;">{{inscrit.codeetu}} {{inscrit.email}}</span>
-                      <button type="button" class="close" aria-label="Close" (click)="removeTutore(i)"><span aria-hidden="true">&times;</span></button>
-                    </div>
-                  </div>              
-                  <div *ngIf="eventClicked.meta.tutores.length == 0">
-                      Aucun inscrit.
-                  </div>
-                </div>
-              </div>
+          
+          <div class="custom-control custom-checkbox col-md-3 align-middle">
+            <input class="custom-control-input" type="checkbox" formControlName="checkAV" id="checkAVupdate">
+            <label class="custom-control-label" for="checkAVupdate">
+              Séance vidéo
+            </label>
           </div>
-          <div class="col-md-4">
-            
+          <div *ngIf="!updateEventForm.get('checkAV').value">
+              <select formControlName="salle" class="custom-select" id="selectOutilAV">
+                <option *ngFor="let s of allSalles" [ngValue]="s">
+                  {{ s.nom }}
+                </option>
+              </select>
+            </div>
+          <div  *ngIf="updateEventForm.get('checkAV').value">
+          <select formControlName="outilAV" class="custom-select" id="selectOutilAV">
+            <option *ngFor="let outil of allOutilsAV" [ngValue]="outil">
+              {{ outil }}
+            </option>
+          </select>
+
           </div>
-
-
         </div>
 
-
-        <div class="row justify-content-center border-top">
-            <button type="submit" class="btn btn-outline-primary" [disabled]="!updateEventForm.valid">Modifier le compte</button>
+        <div class="row justify-content-center border-top mt-3 pt-3">
+            <button type="submit" class="btn btn-outline-primary" [disabled]="!updateEventForm.valid">Modifier la séance</button>
         </div>
     </form>
 
-   
-
+    <div *ngIf="updateEventForm.errors" class="mt-3 pt3">
+      <ngb-alert *ngIf="updateEventForm.errors.collision" type="danger" (close)="this.alertDangerOpened = false; this.updateEventForm.setErrors({'collision': null});">Collision !</ngb-alert>
+    </div>
   </div>
 </ng-template>

@@ -104,8 +104,8 @@ public class EtutoratApplication implements ApplicationRunner {
 		salr.save(s6);
 		
 		Seance s = new Seance(
-				OffsetDateTime.of(2019,03,21,15,0,0,0,ZoneOffset.UTC),
-				OffsetDateTime.of(2019,03,21,15,30,0,0,ZoneOffset.UTC),
+				OffsetDateTime.of(2019,03,27,15,0,0,0,ZoneOffset.UTC),
+				OffsetDateTime.of(2019,03,27,15,30,0,0,ZoneOffset.UTC),
 				"",
 				"Java",
 				4,

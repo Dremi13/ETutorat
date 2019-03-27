@@ -1,8 +1,8 @@
 package app.etutorat.services;
 
 import java.security.GeneralSecurityException;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.Set;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -30,10 +30,13 @@ import app.etutorat.models.requestobjects.MatiereToken;
 import app.etutorat.models.requestobjects.ValidationTuteurToken;
 import app.etutorat.models.requestobjects.forms.CreateAdminForm;
 import app.etutorat.models.requestobjects.forms.EtudiantForm;
+import app.etutorat.models.requestobjects.forms.SeanceForm;
 import app.etutorat.models.requestobjects.forms.UpdateForm;
 import app.exceptions.DuplicateUniqueKeyException;
 import app.exceptions.FullCourseException;
 import app.exceptions.NoElementException;
+import app.exceptions.SeanceCollisionException;
+import app.exceptions.TooManyHoursException;
 
 import static app.etutorat.utils.HashPswd.*;
 
@@ -433,6 +436,27 @@ public class AdminService {
 		return ser.findBy();
 	}
 	
+	public Seance createSeance(SeanceForm form) throws SeanceCollisionException, TooManyHoursException {
+		
+		Seance s = new Seance(	form.getDateDebut(),
+								form.getDateFin(),
+								form.getOutilAV(),
+								form.getSujet(),
+								form.getNbmaxtutores(),
+								form.getTuteur(),
+								form.getSalle());
+		//Check collision
+		checkCollision(s,true);
+		
+		//Verify the number of hours of the new Tuteur
+		checkTuteurHours(s.getTuteur(),s.getDateDebut().until(s.getDateFin(), ChronoUnit.MINUTES));
+		
+		
+		return ser.save(s);
+				
+		
+	}
+	
 	public void joinSeance(Long idTutore, Long idSeance) throws NoElementException, FullCourseException {
 		
 		Optional<Tutore> ot = tor.findById(idTutore);
@@ -443,7 +467,7 @@ public class AdminService {
 		if(!os.isPresent()) throw new NoElementException(idSeance);
 		Seance s = os.get();
 		
-		Set<Tutore> inscrits = s.getTutores();
+		List<Tutore> inscrits = s.getTutores();
 		if(inscrits.size() >= s.getNbmaxtutores()) throw new FullCourseException(idSeance);
 		
 		inscrits.add(t);
@@ -452,6 +476,63 @@ public class AdminService {
 			
 		
 	}
+	
+	
+	
+	public void updateSeance(UpdateForm form) throws NoElementException, SeanceCollisionException, TooManyHoursException {
+		SeanceForm sf = (SeanceForm) form.getForm();
+		Optional<Seance> os = ser.findById(form.getId());
+		if(!os.isPresent()) throw new NoElementException(form.getId());
+		Seance s = os.get();
+		
+		//Collision check
+		checkCollision(s, false);
+		
+		//Verify the number of hours of the new Tuteur
+		if(s.getTuteur().getId() != sf.getTuteur().getId()) {
+			checkTuteurHours(sf.getTuteur(),sf.getDateDebut().until(sf.getDateFin(), ChronoUnit.MINUTES));
+		}
+		
+		s.setDateDebut(sf.getDateDebut());
+		s.setDateFin(sf.getDateFin());
+		s.setNbmaxtutores(sf.getNbmaxtutores());
+		s.setSalle(sf.getSalle());
+		s.setOutilAV(sf.getOutilAV());
+		s.setTuteur(sf.getTuteur());
+		
+		ser.save(s);
+		
+		
+	}
+	
+	//create = true if s is a new seance, false if it's an update. Use to insure s doesn't collide with itself.
+	//Throw SeanceCollisionException if there is collision.
+	public void checkCollision(Seance s, boolean create) throws SeanceCollisionException {
+		if(s.getOutilAV().equals("")) {
+			for(Seance other : ser.findBySalle(s.getSalle())) {
+				if(!create && s.getId() != other.getId()) {
+					if( ((s.getDateDebut().compareTo(other.getDateDebut()) >= 0)   && s.getDateDebut().compareTo(other.getDateFin()) < 0 ) || (s.getDateFin().compareTo(other.getDateFin()) <= 0  && s.getDateFin().compareTo(other.getDateDebut()) > 0) || (s.getDateDebut().compareTo(other.getDateDebut()) <= 0 && s.getDateFin().compareTo(other.getDateFin()) >= 0) ) {
+						throw new SeanceCollisionException(other.getId());
+					}
+				}
+			}
+		}
+	}
+	
+	
+	//Throw TooManyHoursException if the tuteur will exceed his time limitation (23h for now).
+	public void checkTuteurHours(Tuteur tuteur, long nextSeanceDuration) throws TooManyHoursException {
+		List<Seance> seances = ser.findByTuteur(tuteur);
+		long time = 0;
+		
+		for(Seance s : seances) {
+			time += s.getDateDebut().until(s.getDateFin(), ChronoUnit.MINUTES);
+		}
+		
+		//23 h =  1380 minutes
+		if(time + nextSeanceDuration > 1380) throw new TooManyHoursException(tuteur.getId(),time);
+	}
+	
 	
 	public List<Salle> getSalles(){
 		return salr.findAll();
