@@ -81,6 +81,7 @@ public class AuthentificationService {
 				}
 				else {
 					if(!checkPassword(form.getPassword(),etu)) throw new WrongLoginPasswordException(form.getLogin());
+					
 					token.setType("tutore");
 				}
 			}
@@ -88,7 +89,7 @@ public class AuthentificationService {
 				if(!checkPassword(form.getPassword(),etu)) throw new WrongLoginPasswordException(form.getLogin());
 				token.setType("tuteur");
 			}
-			
+			token.setId(etu.getId());
 			token.setLogin(etu.getCodeetu());
 			this.httpSession.setAttribute("token", token);
 		
@@ -131,6 +132,7 @@ public class AuthentificationService {
 				token.setType("admin");
 			}
 			
+			token.setId(admin.getId());
 			token.setLogin(admin.getEmail());
 			this.httpSession.setAttribute("token", token);
 		
@@ -166,7 +168,9 @@ public class AuthentificationService {
 	        token.setLogin(form.getCodeetu());
 	        token.setType("tuteur");
 	        
-	        tur.save(t);
+	        
+	        Tuteur tsaved = tur.save(t);
+	        token.setId(tsaved.getId());
 	        
 	        this.httpSession.setAttribute("token", token);
 	       
@@ -192,7 +196,8 @@ public class AuthentificationService {
 		        token.setLogin(form.getCodeetu());
 		        token.setType("tutore");
 		        
-		        tor.save(t);
+		        Tutore tsaved = tor.save(t);
+		        token.setId(tsaved.getId());
 		        
 		        this.httpSession.setAttribute("token", token);
 		       

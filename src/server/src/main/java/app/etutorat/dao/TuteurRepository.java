@@ -1,6 +1,7 @@
 package app.etutorat.dao;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -13,7 +14,7 @@ import app.etutorat.models.queryobjects.ProjectionTuteur;
 @Repository
 public interface TuteurRepository extends JpaRepository<Tuteur, Long>, EtudiantRepository {
 
-	//@Query a faire vite fait
+	
 	//public List<Tuteur> findByDomainedecompetences(String domaine);
 	
 	
@@ -30,5 +31,6 @@ public interface TuteurRepository extends JpaRepository<Tuteur, Long>, EtudiantR
 
 	
 	public List<ProjectionTuteur> findBy();
+	public Optional<ProjectionTuteur> findProjectionById(Long id);
 	
 }
