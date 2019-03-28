@@ -53,11 +53,13 @@ export class AuthentificationService {
       localStorage.setItem("id",token.id.toString());
       localStorage.setItem("type",token.type);
       localStorage.setItem("login",token.login);
+      localStorage.setItem("permission",token.permission.toString());
     }
     else {
       localStorage.removeItem("id");
       localStorage.removeItem("type");
       localStorage.removeItem("login");
+      localStorage.removeItem("permission");
     }
     
     this.token.next(token);

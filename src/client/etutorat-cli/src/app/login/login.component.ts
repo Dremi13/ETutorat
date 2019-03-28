@@ -12,13 +12,18 @@ import { Token } from '../responseBodies/token';
 })
 export class LoginComponent {
 
+  signinForm = new FormGroup({
+      login: new FormControl('', [Validators.required, Validators.pattern('[a-z][0-9]{8}')]),
+      password: new FormControl('', [Validators.required, Validators.minLength(4), Validators.maxLength(16)])
+    });
+
+  wrongFormAlertOpened: boolean;
+  timeOutNotOK;
+
   constructor ( private as: AuthentificationService,
                 private router : Router) {}
 
-  signinForm = new FormGroup({
-    login: new FormControl('', [Validators.required, Validators.pattern('[a-z][0-9]{8}')]),
-    password: new FormControl('', [Validators.required, Validators.minLength(4), Validators.maxLength(16)])
-  });
+  
   
  
   get login() { return this.signinForm.get('login'); }
@@ -35,9 +40,9 @@ export class LoginComponent {
       error => {
         if(error.status == 404){
           
-          alert(error.message);
+          this.wrongFormAlertOpened = true;
+          this.timeOutNotOK = setTimeout(() => this.wrongFormAlertOpened = false, 3000);
           
-          //this.router.navigate(['/signin']);
         }
       });;
   }

@@ -27,7 +27,7 @@ export class HeaderComponent implements OnInit {
     //Ne s'exécute qu'à l'initialisation. Permet de retrouver le token en cas de chargement forcé.
     this.as.checkSignin().subscribe((token : Token) => {
       
-      console.log(token);
+
       if(token === null) this.type = "signout";
       else              this.type = token.type;
     },
@@ -49,14 +49,12 @@ export class HeaderComponent implements OnInit {
 
   signout(){
     this.as.signout().subscribe((resp: Token) => {
-      console.log("body : " +resp);
       
       this.as.addToken(null);
       this.router.navigate(['/signin']);
     },
     error => {
       if(error.status == 404){
-        console.log(error);
       }
     });;
   }

@@ -23,6 +23,9 @@ export class AdminSigninComponent {
   });
 
 
+  wrongFormAlertOpened: boolean;
+  timeOutNotOK;
+
   get login() { return this.signinForm.get('login'); }
   get password() { return this.signinForm.get('password'); }
 
@@ -36,8 +39,8 @@ export class AdminSigninComponent {
       },
       error => {
         if(error.status == 404){
-        alert(error.message);
-        //this.router.navigate(['/signin']);
+          this.wrongFormAlertOpened = true;
+          this.timeOutNotOK = setTimeout(() => this.wrongFormAlertOpened = false, 3000);
       }
     });;
   }

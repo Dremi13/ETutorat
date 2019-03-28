@@ -1,39 +1,53 @@
 <form [formGroup]="signinForm" (ngSubmit)="onSubmit()">
-  
-  <label>
-    Email :
-    <input type="text" formControlName="login" required>
-  </label>
-
-  <div *ngIf="login.invalid && (login.dirty || login.touched)" class="alert alert-danger">
-    <div *ngIf="login.errors.required">
-      Email requis.
-    </div>
-    <div *ngIf="(login.errors.pattern) && login.touched">
-      Format d'email incorrect.
+  <div class="row justify-content-center">
+    <div class="form-group col-md-3">
+      
+      <div class="justify-content-center">
+        <label for="loginInput" >Email :</label>
+        <input class="form-control" type="text" formControlName="login" id="loginInput" required>
+      </div>
+      <div *ngIf="login.invalid && (login.dirty || login.touched)">
+          <div *ngIf="login.errors.required" class="alert alert-danger">
+            Email requis.
+          </div>
+          <div *ngIf="(login.errors.pattern) && login.touched" class="alert alert-danger">
+            Format d'email incorrect.
+          </div>
+      </div>
+      
     </div>
   </div>
 
 
-  <label>
-    Mot de passe :
-    <input type="password" formControlName="password" required>
-  </label>
-
-  <div *ngIf="password.invalid && (password.dirty || password.touched)" class="alert alert-danger">
-      <div *ngIf="password.errors.required">
-        Mot de passe requis.
+  <div class="row justify-content-center">
+    <div class="form-group col-md-3">
+      <div class="justify-content-center">
+        <label for="passwordInput">Mot de passe :</label>
+        <input class="form-control" type="password" formControlName="password" id="passwordInput" required>
       </div>
-      <div *ngIf="(password.errors.minlength || password.errors.maxlength) && password.touched">
-        Un mot de passe doit :
-        <ul>
-          <li><p>faire entre 4 et 16 caractères.</p><li>
-
-          </ul>
-      </div>
+        <div *ngIf="password.invalid && (password.dirty || password.touched)" >
+            <div *ngIf="password.errors.required" class="alert alert-danger">
+              Mot de passe requis.
+            </div>
+            <div *ngIf="(password.errors.minlength || password.errors.maxlength) && password.touched" class="alert alert-danger">
+              Un mot de passe doit :
+              <ul>
+                <li>faire entre 4 et 16 caractères.</li>
+             </ul>
+            </div>
+        </div>
+      
+    </div>
   </div>
 
 
 
-  <button type="submit" [disabled]="!signinForm.valid">Se connecter</button>
+  <div class="row justify-content-center">
+      <button type="submit" class="btn btn-outline-primary" [disabled]="!signinForm.valid">Se connecter</button>
+    </div>
 </form>
+
+<div class="alert-container mt-3">
+    <ngb-alert  *ngIf="wrongFormAlertOpened" type="danger" (close)="wrongFormAlertOpened = false">Email/mot de passe incorrect(s).</ngb-alert>
+</div>
+  

@@ -28,7 +28,6 @@ import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 
 
 
-
 @NgModule({
   declarations: [
     AppComponent,
@@ -56,11 +55,12 @@ import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
     CalendarModule.forRoot({
       provide: DateAdapter,
       useFactory: adapterFactory
-    }),
+    })
     
     
   ],
   providers: [],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule { 
+}

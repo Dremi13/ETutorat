@@ -32,7 +32,7 @@ const colors: any = {
 })
 export class SeanceTutoreComponent implements OnInit {
 
-
+  today = new Date();
   view : CalendarView = CalendarView.Week;
   viewDate: Date = new Date();
   currentWeekStart : Date = new Date();
@@ -86,7 +86,11 @@ export class SeanceTutoreComponent implements OnInit {
                   
 
                   event = this.seanceService.convertSeanceToEvent(seance);
-                  if(seance.tutores.find(tut => tut.id == currentId)) event.color = colors.blue;
+                  event.meta.inscrit = false;
+                  if(seance.tutores.find(tut => tut.id == currentId)){
+                    event.color = colors.blue;
+                    event.meta.inscrit = true;
+                  }
                   this.eventBySalle[seance.salle.id-1].push(event);
                   this.events = [...this.events,
                   event];
@@ -139,6 +143,7 @@ export class SeanceTutoreComponent implements OnInit {
         () => {
           var newEvent = this.eventClicked;
           newEvent.color = colors.blue;
+          newEvent.meta.inscrit = true;
 
           this.events = this.events.map(iEvent => {
             if (iEvent === this.eventClicked) {
@@ -154,5 +159,26 @@ export class SeanceTutoreComponent implements OnInit {
     }
     
   }
+
+  unjoin(){
+    this.seanceService.unjoin(this.eventClicked.meta.id).subscribe(
+      () => {
+        var newEvent = this.eventClicked;
+        newEvent.color = colors.red;
+        newEvent.meta.inscrit = false;
+
+        this.events = this.events.map(iEvent => {
+          if (iEvent === this.eventClicked) {
+            return newEvent;
+          }
+          return iEvent;
+        });
+        this.modalService.dismissAll();
+      }
+    );
+
+    
+  }
+  
 
 }
