@@ -91,7 +91,7 @@ export class AdminListComponent implements OnInit {
         });
       },
       (reason) => {
-        console.log("Annulation :"+reason);
+        
       });
   
   }
@@ -111,7 +111,7 @@ export class AdminListComponent implements OnInit {
         });
       },
       (reason) => {
-        console.log("Annulation :"+reason);
+
       });
   
   }

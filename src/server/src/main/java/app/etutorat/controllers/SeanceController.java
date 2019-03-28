@@ -61,24 +61,30 @@ public class SeanceController {
 	@PostMapping("/createSeance")
 	public ResponseEntity<Seance> createSeance(@RequestBody SeanceForm form)  {
 		
-		System.out.println("Create");
+		
 		//Vérification des droits
 		if( ((UserToken) this.httpSession.getAttribute("token")).getType().equals("tuteur")) {
-			try {
-				form.isValid();
+			if( ((UserToken) this.httpSession.getAttribute("token")).isPermission()) {
+				try {
+					form.isValid();
+					
+					Seance s = ss.createSeance(form);
+					return ResponseEntity.ok(s);
+				}
+				catch(BadSeanceFormException ex) {
+					throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, ex.getMessage(), ex);
+				} 
+				catch(SeanceCollisionException ex) {
+					throw new ResponseStatusException(HttpStatus.CONFLICT, ex.getMessage(), ex);
+				}
+				catch(TooManyHoursException ex) {
+					throw new ResponseStatusException(HttpStatus.FORBIDDEN, ex.getMessage(), ex);
+				}
+			}
+			else {
+				throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User not authorized !");	
+			}
 			
-				Seance s = ss.createSeance(form);
-				return ResponseEntity.ok(s);
-			}
-			catch(BadSeanceFormException ex) {
-				throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, ex.getMessage(), ex);
-			} 
-			catch(SeanceCollisionException ex) {
-				throw new ResponseStatusException(HttpStatus.CONFLICT, ex.getMessage(), ex);
-			}
-			catch(TooManyHoursException ex) {
-				throw new ResponseStatusException(HttpStatus.FORBIDDEN, ex.getMessage(), ex);
-			}
 			
 		}
 				
@@ -91,7 +97,7 @@ public class SeanceController {
 	@PostMapping("/updateSeance")
 	public ResponseEntity<String> updateSeance(@RequestBody UpdateForm form)  {
 		
-		System.out.println("Here");
+		
 		//Vérification des droits
 		if( ((UserToken) this.httpSession.getAttribute("token")).getType().equals("tuteur")) {
 			try {
@@ -123,7 +129,7 @@ public class SeanceController {
 	@PostMapping("/removeSeance")
 	public ResponseEntity<String> removeSeance(@RequestBody Long id)  {
 		
-		System.out.println("Here");
+		
 		//Vérification des droits
 		if( ((UserToken) this.httpSession.getAttribute("token")).getType().equals("tuteur")) {
 			try {
@@ -145,7 +151,7 @@ public class SeanceController {
 	@PostMapping("/joinSeance")
 	public ResponseEntity<String> joinSeance(@RequestBody Long id)  {
 		
-		System.out.println("Here");
+		
 		//Vérification des droits
 		if( ((UserToken) this.httpSession.getAttribute("token")).getType().equals("tutore")) {
 			try {
@@ -158,6 +164,28 @@ public class SeanceController {
 			}
 			catch(FullCourseException ex) {
 				throw new ResponseStatusException(HttpStatus.CONFLICT, ex.getMessage(), ex);
+			}
+		}
+				
+		else {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not authorized !");		
+		}
+	
+	}
+	
+	@PostMapping("/unjoinSeance")
+	public ResponseEntity<String> unjoinSeance(@RequestBody Long id)  {
+		
+		
+		//Vérification des droits
+		if( ((UserToken) this.httpSession.getAttribute("token")).getType().equals("tutore")) {
+			try {
+				
+				ss.unjoinSeance(id,((UserToken) this.httpSession.getAttribute("token")).getId());
+				return ResponseEntity.ok("");
+			}
+			catch(NoElementException ex) {
+				throw new ResponseStatusException(HttpStatus.NOT_FOUND, ex.getMessage(), ex);
 			}
 		}
 				

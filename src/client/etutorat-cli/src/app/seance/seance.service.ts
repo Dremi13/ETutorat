@@ -35,6 +35,10 @@ export class SeanceService {
     return this.http.post(environment.API_URL+"/joinSeance",idSeance,{withCredentials: true});
   }
 
+  unjoin(idSeance){
+    return this.http.post(environment.API_URL+"/unjoinSeance",idSeance,{withCredentials: true});
+  }
+
   getCurrentTuteur(){
     return this.http.get<Tuteur>(environment.API_URL+"/getCurrentTuteur",{withCredentials: true});
   }

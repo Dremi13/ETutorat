@@ -13,6 +13,7 @@ public class UserToken implements Serializable {
 	private long id;
 	private String login;
 	private String type;
+	private boolean permission;
 	
 	public UserToken() {}
 	
@@ -58,6 +59,14 @@ public class UserToken implements Serializable {
 
 	public void setId(long id) {
 		this.id = id;
+	}
+
+	public boolean isPermission() {
+		return permission;
+	}
+
+	public void setPermission(boolean permission) {
+		this.permission = permission;
 	}
 
 

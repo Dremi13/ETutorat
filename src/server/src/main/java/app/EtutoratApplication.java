@@ -61,25 +61,27 @@ public class EtutoratApplication implements ApplicationRunner {
 		
 	
 		byte[][] r = hashPassword("root");
-		SuperAdministrateur sa = new SuperAdministrateur("Root","admin","admin.root@root.com",r[1],r[0]);
+		SuperAdministrateur sa = new SuperAdministrateur("JAKUBIEC-JAMET","Line","line.jakubiec@lif.univ-mrs.fr",r[1],r[0]);
 		sar.save(sa);
 
 		
-		Tuteur tu = new Tuteur("tu","teur","ta@root.com",r[1],r[0], "b01234567", "0123456789", "Master 2 Informatique");
+		Tuteur tu = new Tuteur("MEBARKI","Abdelghani","abdelghani.mebarki@etu.univ-amu.fr",r[1],r[0], "m11223344", "0123456789", "Master 2 ILD");
 		tur.save(tu);
-		tu = new Tuteur("tu","trice","tu@root.com",r[1],r[0], "c01234567", "0123456789", "Master 2 Informatique");
+		tu = new Tuteur("BOUSTANI","Sara","sara.boustani@etu.univ-amu.fr",r[1],r[0], "b01234567", "0123456789", "Master 2 ILD");
+		tur.save(tu);
+		
+		tu = new Tuteur("JABRANE","Fatima-zahra","fatima-zahra.jabrane@etu.univ-amu.fr",r[1],r[0], "j01234567", "0123456789", "Master 2 ILD");
+		tur.save(tu);
+		
+		tu = new Tuteur("MOSTADI","Sanae","sanae.mostadi@etu.univ-amu.fr",r[1],r[0], "m01234567", "0123456789", "Master 2 ILD");
+		tur.save(tu);
+		tu = new Tuteur("VINCENT","Pierre","pierre.vincent@etu.univ-amu.fr",r[1],r[0], "v01234567", "0123456789", "Master 2 ILD");
 		tur.save(tu);
 		
 		
-		tu = new Tuteur("tu","toyer","tut@root.com",r[1],r[0], "d01234567", "0123456789", "Master 2 Informatique");
-		tur.save(tu);
-		tu = new Tuteur("tru","che","tute@root.com",r[1],r[0], "e01234567", "0123456789", "Master 2 Informatique");
-		tur.save(tu);
-		
-		
-		Tutore to = new Tutore("tu","rbo","tut@root.com",r[1],r[0], "a01234567", "0123456789", "Master 2 Informatique");
+		Tutore to = new Tutore("DEUTSCH","Rémi","remi.deutsch@etu.univ-amu.fr",r[1],r[0], "d15027231", "0123456789", "Licence 2 Allemand");
 		Tutore tForId = tor.save(to);
-		to = new Tutore("trac","teur","tra@root.com",r[1],r[0], "z01234567", "0123456789", "Master 2 Informatique");
+		to = new Tutore("DUPONT","Jacques","jacques.dupont@etu.univ-amu.fr",r[1],r[0], "d01234567", "0123456789", "Licence 3 Informatique");
 		Tutore tForId2 = tor.save(to);
 		
 		

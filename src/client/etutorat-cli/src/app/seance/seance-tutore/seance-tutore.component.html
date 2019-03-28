@@ -65,6 +65,7 @@
       </div>
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-outline-dark" (click)="join()">S'inscire à ce cours</button>
+        <button *ngIf="!eventClicked.meta.inscrit && today < eventClicked.start" type="button" class="btn btn-outline-primary" (click)="join()">S'inscire à ce cours</button>
+        <button *ngIf="eventClicked.meta.inscrit && today < eventClicked.start" type="button" class="btn btn-outline-secondary" (click)="unjoin()">Se désinscire de ce cours</button>
       </div>
   </ng-template>

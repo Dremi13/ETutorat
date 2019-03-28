@@ -46,13 +46,13 @@ export class SeanceTuteurComponent implements OnInit {
 
   actions: CalendarEventAction[] = [
     {
-      label: '<i class="fas fa-edit"></i>',
+      label: '<span class="oi oi-document" title="icon name" aria-hidden="true"></span>',
       onClick: ({ event }: { event: CalendarEvent }): void => {
         this.openUpdateEvent(event);
       }
     },
     {
-      label: '<i class="fas fa-times"></i>',
+      label: '<span class="oi oi-circle-x" title="icon name" aria-hidden="true"></span>',
       onClick: ({ event }: { event: CalendarEvent }): void => {
         this.removeEvent(event);
       }
@@ -152,7 +152,6 @@ export class SeanceTuteurComponent implements OnInit {
     this.seanceService.getCurrentTuteur().subscribe(
       (resp : Tuteur) => {
         this.currentUser = resp;
-        console.log(this.currentUser);
       }
     );
 
@@ -187,7 +186,6 @@ export class SeanceTuteurComponent implements OnInit {
         
         
 
-        console.log(this.createEventForm.get("date").value.year);
 
 
         this.seanceService.getSeances().subscribe(
@@ -197,7 +195,7 @@ export class SeanceTuteurComponent implements OnInit {
                   
 
                   event = this.seanceService.convertSeanceToEvent(seance);
-                  if(seance.tuteur.id === this.currentUser.id)  event.actions = this.actions;
+                  if(seance.tuteur.id === this.currentUser.id && this.currentUser.validationcompte)  event.actions = this.actions;
                   this.eventBySalle[seance.salle.id-1].push(event);
                   this.events = [...this.events,
                   event];
@@ -252,7 +250,8 @@ export class SeanceTuteurComponent implements OnInit {
 
   //Même un administrateur ne peut pas modifier les informations primordiales => celle fausserait l'inscription des tutores. Par conséquent, seules le nombre maximal d'inscrits et la liste des inscrits peuvent être modifiés.
   openUpdateEvent(event: CalendarEvent){
-    if(event.meta.tuteur.id !== this.currentUser.id) return;
+
+    if(event.meta.tuteur.id !== this.currentUser.id && this.currentUser.validationcompte) return;
     this.eventClicked = event;
     
     var salle = this.allSalles.find(s => s.id === this.eventClicked.meta.salle.id);
@@ -293,9 +292,11 @@ export class SeanceTuteurComponent implements OnInit {
           tutores: this.eventClicked.meta.tutores
         }
     };
-    if(this.checkCollision(newEvent, this.eventClicked,this.updateEventForm)){
+    if(this.checkCollisionSalle(newEvent, this.eventClicked,this.updateEventForm)){
       return;
     }
+    
+    if(this.checkCollisionTuteur(newEvent, this.eventClicked,this.createEventForm)) return;
 
     
 
@@ -323,7 +324,6 @@ export class SeanceTuteurComponent implements OnInit {
         this.modalService.dismissAll();
       },
       error => {
-        console.log(error);
         if(error.status == 403){
           this.updateEventForm.setErrors({'tooManyHours': true});
           this.errorMessage = error.error.message;
@@ -338,6 +338,9 @@ export class SeanceTuteurComponent implements OnInit {
 
 
   createEvent(){
+
+    if (this.currentUser.validationcompte) return;
+
     let start = this.createDatetime(this.createEventForm.get("date").value,this.createEventForm.get("startTime").value);
     let end = this.createDatetime(this.createEventForm.get("date").value,this.createEventForm.get("endTime").value);
 
@@ -368,8 +371,8 @@ export class SeanceTuteurComponent implements OnInit {
         }
     };
 
-    console.log(newSeance);
-    if(this.checkCollision(newEvent,null,this.createEventForm)) return;
+    if(this.checkCollisionSalle(newEvent,null,this.createEventForm)) return;
+    if(this.checkCollisionTuteur(newEvent,null,this.createEventForm)) return;
 
     this.seanceService.createSeance(newSeance).subscribe(
     (resp : Seance) => {
@@ -399,7 +402,7 @@ export class SeanceTuteurComponent implements OnInit {
 
 
 
-  checkCollision(event: CalendarEvent, initialEvent: CalendarEvent, form: FormGroup) : boolean {
+  checkCollisionSalle(event: CalendarEvent, initialEvent: CalendarEvent, form: FormGroup) : boolean {
     
     if(event.meta.outilAV == "") {
       for(var ev of this.eventBySalle[event.meta.salle.id-1]){
@@ -414,6 +417,24 @@ export class SeanceTuteurComponent implements OnInit {
         }
       }
     }
+    return false;
+  }
+
+  checkCollisionTuteur(event: CalendarEvent, initialEvent: CalendarEvent, form: FormGroup) : boolean {
+    
+    
+    for(var ev of this.events){
+        
+      if(ev !== initialEvent && ev.meta.tuteur === event.meta.tuteur){
+        if( (event.start >= ev.start && event.start < ev.end) || (event.end <= ev.end && event.end > ev.start) || (event.start <= ev.start && event.end >= ev.end) ){
+          form.setErrors({'collision' : true});
+          this.alertDangerOpened = true;
+          this.timeOut = setTimeout(() => {this.alertDangerOpened = false; form.setErrors({'collision': null})}, 3000);
+          return true;
+        }
+      }
+    }
+      
     return false;
   }
 

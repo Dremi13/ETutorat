@@ -44,15 +44,16 @@ export class AdminSeanceComponent implements OnInit {
 
   locale : string = 'fr';
 
+
   actions: CalendarEventAction[] = [
     {
-      label: '<i class="fas fa-edit"></i>',
+      label: '<span class="oi oi-document" title="icon name" aria-hidden="true"></span>',
       onClick: ({ event }: { event: CalendarEvent }): void => {
         this.openUpdateEvent(event);
       }
     },
     {
-      label: '<i class="fas fa-times"></i>',
+      label: '<span class="oi oi-circle-x" title="icon name" aria-hidden="true"></span>',
       onClick: ({ event }: { event: CalendarEvent }): void => {
         this.removeEvent(event);
       }
@@ -186,7 +187,6 @@ export class AdminSeanceComponent implements OnInit {
 
         this.createEventForm.get("salle").setValue(this.allSalles[0]);
         var today = new Date();
-        console.log(today);
         this.createEventForm.get("date").setValue({year: today.getFullYear(), month: today.getMonth()+1, day: today.getDate()});
         
         if(today.getHours() > 20){
@@ -205,8 +205,6 @@ export class AdminSeanceComponent implements OnInit {
         
         
 
-        console.log(this.createEventForm.get("date").value.year);
-
 
         this.adminSeanceService.getSeances().subscribe(
               (resp : Seance[]) => {
@@ -221,7 +219,6 @@ export class AdminSeanceComponent implements OnInit {
                   event];
                   
                 }
-                console.log(this.events);
               },
               errorResponse => {
                 if(errorResponse.status == 404){
@@ -308,9 +305,11 @@ export class AdminSeanceComponent implements OnInit {
           tutores: this.eventClicked.meta.tutores
         }
     };
-    if(this.checkCollision(newEvent, this.eventClicked,this.updateEventForm)){
+    if(this.checkCollisionSalle(newEvent, this.eventClicked,this.updateEventForm)){
       return;
     }
+    
+    if(this.checkCollisionTuteur(newEvent,this.eventClicked,this.createEventForm)) return;
 
     
 
@@ -338,7 +337,6 @@ export class AdminSeanceComponent implements OnInit {
         this.modalService.dismissAll();
       },
       error => {
-        console.log(error);
         if(error.status == 403){
           this.updateEventForm.setErrors({'tooManyHours': true});
           this.errorMessage = error.error.message;
@@ -363,7 +361,7 @@ export class AdminSeanceComponent implements OnInit {
       outilAV: this.createEventForm.get("checkAV").value ? this.createEventForm.get("outilAV").value : "",
       tuteur: this.createEventForm.get("tuteur").value,
       salle: this.createEventForm.get("salle").value,
-      nbmaxtutores: 0
+      nbmaxtutores: 1
     }
 
 
@@ -378,13 +376,14 @@ export class AdminSeanceComponent implements OnInit {
           tuteur: this.createEventForm.get("tuteur").value,
           outilAV: this.createEventForm.get("checkAV").value ? this.createEventForm.get("outilAV").value : "",
           salle: this.createEventForm.get("salle").value,
-          nbmaxtutores: 0,
+          nbmaxtutores: 1,
           tutores: []
         }
     };
 
 
-    if(this.checkCollision(newEvent,null,this.createEventForm)) return;
+    if(this.checkCollisionSalle(newEvent,null,this.createEventForm)) return;
+    if(this.checkCollisionTuteur(newEvent,null,this.createEventForm)) return;
 
     this.adminSeanceService.createSeance(newSeance).subscribe(
     (resp : Seance) => {
@@ -414,7 +413,7 @@ export class AdminSeanceComponent implements OnInit {
 
 
 
-  checkCollision(event: CalendarEvent, initialEvent: CalendarEvent, form: FormGroup) : boolean {
+  checkCollisionSalle(event: CalendarEvent, initialEvent: CalendarEvent, form: FormGroup) : boolean {
     
     if(event.meta.outilAV == "") {
       for(var ev of this.eventBySalle[event.meta.salle.id-1]){
@@ -429,6 +428,26 @@ export class AdminSeanceComponent implements OnInit {
         }
       }
     }
+    return false;
+  }
+
+  checkCollisionTuteur(event: CalendarEvent, initialEvent: CalendarEvent, form: FormGroup) : boolean {
+    
+    
+    for(var ev of this.events){
+        
+      if(ev.meta.id !== initialEvent.meta.id && ev.meta.tuteur === event.meta.tuteur){
+        if( (event.start >= ev.start && event.start < ev.end) || (event.end <= ev.end && event.end > ev.start) || (event.start <= ev.start && event.end >= ev.end) ){
+
+
+          form.setErrors({'collision' : true});
+          this.alertDangerOpened = true;
+          this.timeOut = setTimeout(() => {this.alertDangerOpened = false; form.setErrors({'collision': null})}, 3000);
+          return true;
+        }
+      }
+    }
+      
     return false;
   }
 

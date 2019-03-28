@@ -90,6 +90,24 @@ public class SeanceService {
 		
 	}
 	
+	public void unjoinSeance(Long idSeance, Long idTutore) throws NoElementException {
+		
+		Optional<Tutore> ot = tor.findById(idTutore);
+		if(!ot.isPresent()) throw new NoElementException(idTutore);
+		Tutore t = ot.get();
+		
+		Optional<Seance> os = ser.findById(idSeance);
+		if(!os.isPresent()) throw new NoElementException(idSeance);
+		Seance s = os.get();
+		
+		List<Tutore> inscrits = s.getTutores();
+		if(!inscrits.contains(t)) return; //should throw an exception but i don't have the time i guess. (hard to be alone).
+		
+		inscrits.remove(t);
+		s.setTutores(inscrits);
+		ser.save(s);
+	}
+	
 	
 	
 	public void updateSeance(UpdateForm form) throws NoElementException, SeanceCollisionException, TooManyHoursException {
